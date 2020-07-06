@@ -1,7 +1,8 @@
 const path = require('path')
+
 const createFolderToSaveData = require('../../utils/CreateFolderToSaveData')
 
-const Loguin = async(page, loguin, password, browser, settingsProcessing) => {
+const Loguin = async (page, loguin, password, browser, settingsProcessing) => {
     try {
         await page.waitFor('#wt38_wtLoginContent_wtUserNameInput')
         await page.type('#wt38_wtLoginContent_wtUserNameInput', loguin)
@@ -11,18 +12,18 @@ const Loguin = async(page, loguin, password, browser, settingsProcessing) => {
 
         let userInvalid = false
         try {
-            userInvalid = await page.evaluate( () => {
+            userInvalid = await page.evaluate(() => {
                 return document.querySelector('#wt38_WebPatterns_wt5_block_RichWidgets_wt9_block_wtSanitizedHtml2').textContent
-            } )
+            })
         } catch (error) {
             userInvalid = false
-        }        
+        }
 
-        if(userInvalid !== false){
+        if (userInvalid !== false) {
             throw 'Usuário ou Senha Inválida'
         }
     } catch (error) {
-        if(error === 'Usuário ou Senha Inválida'){
+        if (error === 'Usuário ou Senha Inválida') {
             console.log('[Final-Loguin] - Usuário ou senha inválida')
         } else {
             console.log('[Final-Loguin] - Erro ao fazer Loguin')
@@ -30,7 +31,7 @@ const Loguin = async(page, loguin, password, browser, settingsProcessing) => {
         const settings = { ...settingsProcessing, type: 'error' }
         let pathImg = createFolderToSaveData(settings)
         pathImg = path.join(pathImg, 'Loguin.png')
-        await page.screenshot( { path: pathImg } )
+        await page.screenshot({ path: pathImg })
         await browser.close()
         throw 'Error-Loguin'
     }
