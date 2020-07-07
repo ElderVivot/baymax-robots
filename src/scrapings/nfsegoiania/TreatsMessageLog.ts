@@ -1,0 +1,41 @@
+import path from 'path'
+import { Browser, Page } from 'puppeteer'
+
+import SaveLogPrefGoiania from '../../controllers/SaveLogPrefGoiania'
+import ISettingsGoiania from '../../models/ISettingsGoiania'
+import createFolderToSaveData from '../../utils/CreateFolderToSaveData'
+
+export default class TreatsMessageLog {
+    private page: Page
+    private browser: Browser | undefined
+    private settings: ISettingsGoiania
+    private pathImg = ''
+
+    constructor (page: Page, settings: ISettingsGoiania, browser?: Browser) {
+        this.page = page
+        this.browser = browser
+        this.settings = settings
+    }
+
+    async saveLog (): Promise<void> {
+        this.pathImg = await createFolderToSaveData(this.settings)
+        this.pathImg = path.resolve(this.pathImg, `${this.settings.messageLog}.png`)
+        await this.page.screenshot({ path: this.pathImg })
+        if (this.browser) await this.browser.close()
+
+        const saveLogPrefGoiania = new SaveLogPrefGoiania()
+        await saveLogPrefGoiania.saveLog({
+            prefGoianiaAccess: this.settings.idUser,
+            hourLog: this.settings.hourLog,
+            typeLog: this.settings.typeLog || 'error',
+            messageLog: this.settings.messageLog || '',
+            messageError: this.settings.messageError,
+            urlImageDown: this.pathImg,
+            codeCompanie: this.settings.codeCompanie,
+            nameCompanie: this.settings.companie,
+            inscricaoMunicipal: this.settings.inscricaoMunicipal
+        })
+
+        throw `[${this.settings.typeLog}]-${this.settings.messageLog}`
+    }
+}

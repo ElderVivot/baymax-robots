@@ -19,7 +19,6 @@ class Applicattion {
             const settings = {
                 dateHourProcessing: this.hourLogToCreateFolder,
                 hourLog: this.hourLog,
-                // companies: this.companies,
                 loguin: access.user,
                 password: access.password,
                 idUser: access.id

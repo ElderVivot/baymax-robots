@@ -8,7 +8,6 @@ export default class GetPrefGoianiaAccess {
             if (access.status === 200) {
                 accessResult = access.data
             }
-            console.log(`- [controllers_GetSettingsDownNotes] --> Success --> ${1} length`)
             return accessResult
         } catch (error) {
             console.log(`- [controllers_GetSettingsDownNotes] --> Error --> ${error}`)

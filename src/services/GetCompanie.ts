@@ -1,13 +1,17 @@
-import api from './api'
+import GetCompanies from '../controllers/GetCompanies'
+import ICompanies from '../models/ICompanies'
 
-export default class GetCompanies {
-    async onlyActives (): Promise<Boolean> {
-        return false
+export default class GetCompanie {
+    private readonly onlyActive: boolean
+    private readonly filter: string
+
+    constructor (filter: string, onlyActive: boolean) {
+        this.filter = filter
+        this.onlyActive = onlyActive
     }
 
-    async getCompanies () {
-        const companies = await api.get('/companies')
-        return companies
+    async checkIfActive (): Promise<Boolean> {
+        return true
         // const companies = await getExtractCompanies.getData()
         // for (const companie of companies) {
         //     const cgce_emp = companie.cgce_emp
@@ -29,4 +33,13 @@ export default class GetCompanies {
         //     }
         // }
     }
+
+    async getCompanie (): Promise<ICompanies> {
+        const getCompanies = new GetCompanies()
+        const companies = await getCompanies.getCompanies(this.filter)
+        return companies[0]
+    }
 }
+
+// const getCompanie = new GetCompanie('?code=0', false)
+// getCompanie.getCompanie().then(result => console.log(result))
