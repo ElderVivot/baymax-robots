@@ -21,6 +21,7 @@ export default class TreatsMessageLog {
         this.pathImg = await createFolderToSaveData(this.settings)
         this.pathImg = path.resolve(this.pathImg, `${this.settings.messageLog}.png`)
         await this.page.screenshot({ path: this.pathImg })
+        await this.page.close()
         if (this.browser) await this.browser.close()
 
         const saveLogPrefGoiania = new SaveLogPrefGoiania()

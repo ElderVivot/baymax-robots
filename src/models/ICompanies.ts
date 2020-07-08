@@ -3,5 +3,6 @@ export default interface ICompanies {
     name: string,
     status: string,
     dateFinalAsClient: string,
-    inscricaoMunicipal: string
+    inscricaoMunicipal: string,
+    cgce: string
 }

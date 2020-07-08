@@ -1,4 +1,6 @@
-const CloseOnePage = async(page) => {
+import { Page } from 'puppeteer'
+
+const CloseOnePage = async (page: Page): Promise<void> => {
     try {
         await page.close()
         console.log('\t[Final-Empresa] - Fechando aba')
@@ -8,4 +10,4 @@ const CloseOnePage = async(page) => {
     }
 }
 
-module.exports = CloseOnePage
+export default CloseOnePage

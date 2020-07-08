@@ -7,12 +7,14 @@ export default interface ISettingsGoiania {
     idUser: number,
     password: string,
     typeLog?: TTypeLog,
-    companie?: string,
-    inscricaoMunicipal?: string,
     codeCompanie?: string,
+    companie?: string,
+    cgceCompanie?: string,
+    inscricaoMunicipal?: string,
     year?: string,
     month?: string,
     messageError?: string
     messageLog?: string
-    error?: string
+    error?: string,
+    valueLabelSite?: string
 }

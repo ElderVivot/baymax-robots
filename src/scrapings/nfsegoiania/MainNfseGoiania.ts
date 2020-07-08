@@ -1,8 +1,9 @@
-import puppeteer from 'puppeteer'
+import puppeteer, { Page } from 'puppeteer'
 
 import ISettingsGoiania from '../../models/ISettingsGoiania'
 import GetCompanie from '../../services/GetCompanie'
 import AlertSimplesNacional from './AlertSimplesNacional'
+import ChangeCompanie from './ChangeCompanie'
 import CheckIfAvisoFrameMnuAfterEntrar from './CheckIfAvisoFrameMnuAfterEntrar'
 import CheckIfEmpresaEstaBaixada from './CheckIfEmpresaEstaBaixada'
 import CheckIfExistNoteInPeriod from './CheckIfExistNoteInPeriod'
@@ -18,12 +19,14 @@ import GetContentXML from './GetContentXML'
 import GetOptionsEmpresas from './GetOptionsEmpresas'
 import GotoLinkNFeEletrotinaEntrar from './GotoLinkNFeEletrotinaEntrar'
 import Loguin from './Loguin'
+import OpenCompanieInNewPage from './OpenCompanieInNewPage'
 import OpenSiteGoiania from './OpenSiteGoiania'
 import SaveXML from './SaveXML'
 import SelectPeriodToDownload from './SelectPeriodToDownload'
+import SerializeXML from './SerializeXML'
 
 const MainNfseGoiania = async (settings: ISettingsGoiania): Promise<void> => {
-    const { loguin, password } = settings
+    const { loguin } = settings
 
     try {
         console.log(`[0] - Abrindo loguin ${loguin}`)
@@ -55,7 +58,7 @@ const MainNfseGoiania = async (settings: ISettingsGoiania): Promise<void> => {
         for (const option of optionsEmpresas) {
             console.log(`\t[5] - Iniciando processamento da empresa ${option.label} - ${option.inscricaoMunicipal}`)
 
-            // settings.valueEmpresa = option.value
+            settings.valueLabelSite = option.value
             settings.companie = option.label
             settings.inscricaoMunicipal = option.inscricaoMunicipal
 
@@ -67,12 +70,11 @@ const MainNfseGoiania = async (settings: ISettingsGoiania): Promise<void> => {
                 // 7 - Abre uma nova aba no navegador e navega pra página atual
                 const pageEmpresa = await browser.newPage()
                 await pageEmpresa.setViewport({ width: 0, height: 0 })
-                await pageEmpresa.goto(urlActual)
+                await OpenCompanieInNewPage(pageEmpresa, settings, urlActual)
 
                 // 8 - Seleciona a empresa
                 console.log('\t[6] - Realizando a troca pra empresa atual')
-                await pageEmpresa.waitFor('#GoianiaTheme_wtTelaPrincipal_block_wtActions_SISEGIntegration_wt104_block_wtAcessos')
-                await pageEmpresa.select('#GoianiaTheme_wtTelaPrincipal_block_wtActions_SISEGIntegration_wt104_block_wtAcessos', option.value)
+                await ChangeCompanie(pageEmpresa, settings)
 
                 // 9 - Aguardando troca
                 console.log('\t[7] - Checando se a troca foi realizada com sucesso')
@@ -94,45 +96,53 @@ const MainNfseGoiania = async (settings: ISettingsGoiania): Promise<void> => {
                 // empresa, pois geralmente quando tem é empresa sem atividade de serviço ou usuário inválido
                 await CheckIfAvisoFrameMnuAfterEntrar(pageEmpresa, settings)
 
-                //         // 14 - Passa pelo Alerta do Simples Nacional
-                //         console.log('\t[11] - Passando pelo alerta do simples nacional.')
-                //         await AlertSimplesNacional(pageEmpresa, settings)
+                // 14 - Passa pelo Alerta do Simples Nacional
+                console.log('\t[11] - Passando pelo alerta do simples nacional.')
+                await AlertSimplesNacional(pageEmpresa, settings)
 
-                //         // 15 - Clica no botão "Download de XML de Notas Fiscais por período"
-                //         console.log('\t[12] - Clicando no botão "Download de XML de Notas Fiscais por período"')
-                //         await ClickDownloadXML(pageEmpresa, settings)
+                // 15 - Clica no botão "Download de XML de Notas Fiscais por período"
+                console.log('\t[12] - Clicando no botão "Download de XML de Notas Fiscais por período"')
+                await ClickDownloadXML(pageEmpresa, settings)
 
-                //         // 16 - Analisa se o CNPJ é de cliente válido
-                //         console.log('\t[13] - Analisando se o CNPJ/CPF do Prestador é cliente desta Contabilidade')
-                //         const cpfCnpj = await GetCNPJPrestador(pageEmpresa, settings)
+                // 16 - Analisa se o CNPJ é de cliente válido
+                console.log('\t[13] - Analisando se o CNPJ/CPF do Prestador é cliente desta Contabilidade')
+                settings.cgceCompanie = await GetCNPJPrestador(pageEmpresa, settings)
 
-                //         settings.cpfCnpj = cpfCnpj
+                if (!settings.codeCompanie) {
+                    const getCompanie2 = new GetCompanie(`?cgce=${settings.cgceCompanie}`, false)
+                    const companie2 = await getCompanie2.getCompanie()
+                    settings.codeCompanie = companie2 ? companie2.code : ''
+                }
 
-                //         // 17 - Seleciona o Período pra download
-                //         console.log('\t[14] - Seleciona o período desejado pra baixar os XMLs')
-                //         await SelectPeriodToDownload(pageEmpresa, settings)
+                // 17 - Seleciona o Período pra download
+                console.log('\t[14] - Seleciona o período desejado pra baixar os XMLs')
+                await SelectPeriodToDownload(pageEmpresa, settings)
 
-                //         // 18 - Clica no botão "Listar"
-                //         console.log('\t[15] - Clicando no botão "Listar"')
-                //         const newPagePromise = new Promise(resolve => {
-                //             browser.once('targetcreated', target => resolve(target.page()))
-                //         })
-                //         await ClickListarXML(pageEmpresa, newPagePromise, settings)
+                // 18 - Clica no botão "Listar"
+                console.log('\t[15] - Clicando no botão "Listar"')
+                const newPagePromise: Promise<Page> = new Promise(resolve => (
+                    browser.once('targetcreated', target => resolve(target.page()))
+                ))
+                await ClickListarXML(pageEmpresa, settings, newPagePromise)
 
-                //         // 19 - Verifica se tem notas no período solicitado, caso não, para o processamento
-                //         await CheckIfExistNoteInPeriod(pageEmpresa, settings)
+                // 19 - Verifica se tem notas no período solicitado, caso não, para o processamento
+                await CheckIfExistNoteInPeriod(pageEmpresa, settings)
 
-                //         // 20 - Abre o conteúdo do XML
-                //         console.log('\t[16] - Abrindo os dados das notas')
-                //         await ClickToOpenContentXML(pageEmpresa, settings)
+                // 20 - Abre o conteúdo do XML
+                console.log('\t[16] - Abrindo os dados das notas')
+                await ClickToOpenContentXML(pageEmpresa, settings)
 
-                //         // 21 - Pega conteúdo do XML
-                //         console.log('\t[17] - Obtendo conteúdo das notas')
-                //         const contentXML = await GetContentXML(pageEmpresa, settings)
+                // 21 - Pega conteúdo do XML
+                console.log('\t[17] - Obtendo conteúdo das notas')
+                const contentXML = await GetContentXML(pageEmpresa, settings)
 
-                //         // 22 - Salva o XML
-                //         console.log('\t[18] - Salvando XML das notas')
-                //         await SaveXML(contentXML, settings)
+                // 21 - Pega conteúdo do XML
+                console.log('\t[18] - Retirando caracter inválido dos XMLs')
+                const contentXMLSerializable = await SerializeXML(pageEmpresa, settings, contentXML)
+
+                // 22 - Salva o XML
+                console.log('\t[19] - Salvando XML das notas')
+                await SaveXML(pageEmpresa, settings, contentXMLSerializable)
 
                 // Fecha a aba da empresa afim de que possa abrir outra
                 await CloseOnePage(pageEmpresa)
