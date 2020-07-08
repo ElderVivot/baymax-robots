@@ -22,7 +22,6 @@ const CheckIfEmpresaEstaBaixada = async (page: Page, settings: ISettingsGoiania)
             console.log('\t[Final-Empresa] - Erro ao verificar se a empresa está com o status "Baixa"')
         }
         console.log('\t-------------------------------------------------')
-        settings.typeLog = 'error'
         settings.messageLog = 'CheckIfEmpresaEstaBaixada'
         settings.messageError = error
 

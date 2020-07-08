@@ -31,7 +31,7 @@ const MainNfseGoiania = async (settings: ISettingsGoiania): Promise<void> => {
     try {
         console.log(`[0] - Abrindo loguin ${loguin}`)
 
-        const browser = await puppeteer.launch({ headless: false, args: ['--start-maximized'] })
+        const browser = await puppeteer.launch({ headless: true, args: ['--start-maximized'] })
         const page = await browser.newPage()
         await page.setViewport({ width: 1366, height: 768 })
 
@@ -57,6 +57,21 @@ const MainNfseGoiania = async (settings: ISettingsGoiania): Promise<void> => {
         // 6 - Percorre o array de empresas
         for (const option of optionsEmpresas) {
             console.log(`\t[5] - Iniciando processamento da empresa ${option.label} - ${option.inscricaoMunicipal}`)
+
+            // set the default values at each interation
+            settings.cgceCompanie = undefined
+            settings.codeCompanie = undefined
+            settings.companie = undefined
+            settings.dateEndDown = undefined
+            settings.dateStartDown = undefined
+            settings.error = undefined
+            settings.inscricaoMunicipal = undefined
+            settings.messageError = undefined
+            settings.messageLog = undefined
+            settings.month = undefined
+            settings.typeLog = 'error'
+            settings.valueLabelSite = undefined
+            settings.year = undefined
 
             settings.valueLabelSite = option.value
             settings.companie = option.label
@@ -147,12 +162,11 @@ const MainNfseGoiania = async (settings: ISettingsGoiania): Promise<void> => {
                 // Fecha a aba da empresa afim de que possa abrir outra
                 await CloseOnePage(pageEmpresa)
             } catch (error) {
-                console.log(error)
+                // console.log(error)
             }
         }
 
         console.log('[Final-Loguin] - Todos os dados deste loguin processados, fechando navegador.')
-        await page.waitFor(3000)
         await browser.close()
     } catch (error) {
         console.log(error)

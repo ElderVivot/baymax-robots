@@ -5,7 +5,7 @@ import TreatsMessageLog from './TreatsMessageLog'
 
 const SerializeXML = async (page: Page, settings: ISettingsGoiania, contentXML: string): Promise<string> => {
     try {
-        return contentXML.replace(/[^a-zA-Z0-9.'"!+:><=)?$(*,-_ \\]/g, '')
+        return contentXML.replace(/[^a-zA-Z0-9.'"!+:><=)?$(*,-_ \\\n\r]/g, '')
     } catch (error) {
         console.log('\t[Final-Empresa] - Erro ao retirar caracteres inválidos XML')
         console.log('\t-------------------------------------------------')

@@ -20,7 +20,7 @@ export default class TreatsMessageLog {
     async saveLog (): Promise<void> {
         this.pathImg = await createFolderToSaveData(this.settings)
         this.pathImg = path.resolve(this.pathImg, `${this.settings.messageLog}.png`)
-        await this.page.screenshot({ path: this.pathImg })
+        await this.page.screenshot({ path: this.pathImg, fullPage: true })
         await this.page.close()
         if (this.browser) await this.browser.close()
 
@@ -34,7 +34,9 @@ export default class TreatsMessageLog {
             urlImageDown: this.pathImg,
             codeCompanie: this.settings.codeCompanie,
             nameCompanie: this.settings.companie,
-            inscricaoMunicipal: this.settings.inscricaoMunicipal
+            inscricaoMunicipal: this.settings.inscricaoMunicipal,
+            dateStartDown: this.settings.dateStartDown,
+            dateEndDown: this.settings.dateEndDown
         })
 
         throw `[${this.settings.typeLog}]-${this.settings.messageLog}`
