@@ -18,5 +18,7 @@ export default interface ISettingsGoiania {
     error?: string,
     valueLabelSite?: string,
     dateStartDown?: string,
-    dateEndDown?: string
+    dateEndDown?: string,
+    dayInitialMonth?: string,
+    dayFinalMonth?: string
 }

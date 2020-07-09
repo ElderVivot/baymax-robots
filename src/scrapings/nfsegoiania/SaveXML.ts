@@ -12,13 +12,13 @@ const SaveXML = async (page: Page, settings: ISettingsGoiania, content: string):
     settings.messageLog = 'SaveXML'
     settings.messageError = ''
     let pathNote = await createFolderToSaveData(settings)
-    pathNote = path.join(pathNote, `${settings.cgceCompanie}.xml`)
+    pathNote = path.join(pathNote, `${settings.dayInitialMonth}ao${settings.dayFinalMonth}_${settings.month}${settings.year}.xml`)
     let existError = false
     fs.writeFile(pathNote, `<geral>${content}</geral>`, async (error) => {
         if (error) {
             existError = true
-            console.log('\t[Final-Empresa] - Erro ao salvar XML')
-            console.log('\t-------------------------------------------------')
+            console.log('\t\t[Final-Empresa-Mes] - Erro ao salvar XML')
+            console.log('\t\t-------------------------------------------------')
             settings.typeLog = 'error'
             settings.messageError = error.message
 

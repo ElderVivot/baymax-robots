@@ -24,12 +24,12 @@ const GetCNPJPrestador = async (page: Page, settings: ISettingsGoiania): Promise
     } catch (error) {
         settings.typeLog = 'error'
         if (error === 'IS_NOT_CLIENT') {
-            console.log('\t[14] - Empresa não é cliente desta Contabilidade neste período')
+            console.log('\t\t[14] - Empresa não é cliente desta Contabilidade neste período')
             settings.typeLog = 'warning'
         } else {
-            console.log('\t[Final-Empresa] - Erro ao checar o CNPJ/CPF')
+            console.log('\t\t[Final-Empresa] - Erro ao checar o CNPJ/CPF')
         }
-        console.log('\t-------------------------------------------------')
+        console.log('\t\t-------------------------------------------------')
         settings.messageLog = 'GetCNPJPrestador'
         settings.messageError = error
 

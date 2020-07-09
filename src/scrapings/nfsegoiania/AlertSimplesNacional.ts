@@ -15,8 +15,8 @@ const AlertSimplesNacional = async (page: Page, settings: ISettingsGoiania): Pro
             throw 'NOT_FOUND_FRAME_CPO'
         }
     } catch (error) {
-        console.log('\t[Final-Empresa] - Erro ao passar pelo alerta do simples nacional.')
-        console.log('\t-------------------------------------------------')
+        console.log('\t\t[Final-Empresa-Mes] - Erro ao passar pelo alerta do simples nacional.')
+        console.log('\t\t-------------------------------------------------')
         settings.typeLog = 'error'
         settings.messageLog = 'AlertSimplesNacional'
         settings.messageError = error

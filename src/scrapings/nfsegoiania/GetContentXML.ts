@@ -8,8 +8,8 @@ const GetContentXML = async (page: Page, settings: ISettingsGoiania): Promise<st
         await page.waitFor('body pre')
         return await page.evaluate(() => document.querySelector('body pre')?.textContent) || ''
     } catch (error) {
-        console.log('\t[Final-Empresa] - Erro ao obter o conteúdo do XML')
-        console.log('\t-------------------------------------------------')
+        console.log('\t\t[Final-Empresa-Mes] - Erro ao obter o conteúdo do XML')
+        console.log('\t\t-------------------------------------------------')
         settings.typeLog = 'error'
         settings.messageLog = 'GetContentXML'
         settings.messageError = error

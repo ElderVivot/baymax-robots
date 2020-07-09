@@ -7,8 +7,8 @@ const SerializeXML = async (page: Page, settings: ISettingsGoiania, contentXML: 
     try {
         return contentXML.replace(/[^a-zA-Z0-9.'"!+:><=)?$(*,-_ \\\n\r]/g, '')
     } catch (error) {
-        console.log('\t[Final-Empresa] - Erro ao retirar caracteres inválidos XML')
-        console.log('\t-------------------------------------------------')
+        console.log('\t\t[Final-Empresa-Mes] - Erro ao retirar caracteres inválidos XML')
+        console.log('\t\t-------------------------------------------------')
         settings.typeLog = 'error'
         settings.messageLog = 'SerializeXML'
         settings.messageError = error

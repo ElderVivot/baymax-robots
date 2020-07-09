@@ -17,8 +17,8 @@ const GotoLinkNFeEletrotinaEntrar = async (page: Page, settings: ISettingsGoiani
             await page.goto(urlButtonEntrar)
         }
     } catch (error) {
-        console.log('\t[Final-Empresa] - Erro ao abrir o link do "NF-e Eletrônica" e passar pelo Alert')
-        console.log('\t-------------------------------------------------')
+        console.log('\t\t[Final-Empresa-Mes] - Erro ao abrir o link do "NF-e Eletrônica" e passar pelo Alert')
+        console.log('\t\t-------------------------------------------------')
         settings.typeLog = 'error'
         settings.messageLog = 'GotoLinkNFeEletrotinaEntrar'
         settings.messageError = error

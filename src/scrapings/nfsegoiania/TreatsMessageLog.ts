@@ -39,6 +39,6 @@ export default class TreatsMessageLog {
             dateEndDown: this.settings.dateEndDown
         })
 
-        throw `[${this.settings.typeLog}]-${this.settings.messageLog}`
+        throw `[${this.settings.typeLog}]-${this.settings.messageLog}-${this.settings.messageError}`
     }
 }

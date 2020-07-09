@@ -2,6 +2,9 @@ import puppeteer, { Page } from 'puppeteer'
 
 import ISettingsGoiania from '../../models/ISettingsGoiania'
 import GetCompanie from '../../services/GetCompanie'
+import PeriodToDownNotesGoiania from '../../services/PeriodToDownNotesGoiania'
+import SetDateInicialAndFinalOfMonth from '../../services/SetDateInicialAndFinalOfMonth'
+import * as functions from '../../utils/functions'
 import AlertSimplesNacional from './AlertSimplesNacional'
 import ChangeCompanie from './ChangeCompanie'
 import CheckIfAvisoFrameMnuAfterEntrar from './CheckIfAvisoFrameMnuAfterEntrar'
@@ -58,7 +61,7 @@ const MainNfseGoiania = async (settings: ISettingsGoiania): Promise<void> => {
         for (const option of optionsEmpresas) {
             console.log(`\t[5] - Iniciando processamento da empresa ${option.label} - ${option.inscricaoMunicipal}`)
 
-            // set the default values at each interation
+            // set the default values at each iteration
             settings.cgceCompanie = undefined
             settings.codeCompanie = undefined
             settings.companie = undefined
@@ -73,6 +76,7 @@ const MainNfseGoiania = async (settings: ISettingsGoiania): Promise<void> => {
             settings.valueLabelSite = undefined
             settings.year = undefined
 
+            // set new values
             settings.valueLabelSite = option.value
             settings.companie = option.label
             settings.inscricaoMunicipal = option.inscricaoMunicipal
@@ -99,65 +103,103 @@ const MainNfseGoiania = async (settings: ISettingsGoiania): Promise<void> => {
                 console.log('\t[8] - Verificando se o "Contribuinte está com a situação Baixada/Suspensa"')
                 await CheckIfEmpresaEstaBaixada(pageEmpresa, settings)
 
-                // 11 - Clicando no botão NF-e Eletrônica
-                console.log('\t[9] - Clicando no botão "NF-e Eletrônica"')
-                await ClickNFeEletronica(pageEmpresa, settings)
+                // 17 - Pega o período necessário pra processamento
+                const periodToDown = await PeriodToDownNotesGoiania(settings)
+                let year = periodToDown.dateStart.getFullYear()
+                const yearInicial = year
+                const yearFinal = periodToDown.dateEnd.getFullYear()
+                const monthInicial = periodToDown.dateStart.getMonth() + 1
+                const monthFinal = periodToDown.dateEnd.getMonth() + 1
 
-                // 12 - Abre o link do botão "Entrar"
-                console.log('\t[10] - Clicando no botão "Entrar"')
-                await GotoLinkNFeEletrotinaEntrar(pageEmpresa, settings)
+                const urlActualEmpresa = pageEmpresa.url()
 
-                // 13 - Aviso depois do botão "Entrar" --> caso tenha aviso para o processamento desta
-                // empresa, pois geralmente quando tem é empresa sem atividade de serviço ou usuário inválido
-                await CheckIfAvisoFrameMnuAfterEntrar(pageEmpresa, settings)
+                let breaker = false
+                while (year <= yearFinal && breaker === false) {
+                    const months = functions.returnMonthsOfYear(year, monthInicial, yearInicial, monthFinal, yearFinal)
 
-                // 14 - Passa pelo Alerta do Simples Nacional
-                console.log('\t[11] - Passando pelo alerta do simples nacional.')
-                await AlertSimplesNacional(pageEmpresa, settings)
+                    for (const month of months) {
+                        settings = SetDateInicialAndFinalOfMonth(settings, periodToDown, month, year)
 
-                // 15 - Clica no botão "Download de XML de Notas Fiscais por período"
-                console.log('\t[12] - Clicando no botão "Download de XML de Notas Fiscais por período"')
-                await ClickDownloadXML(pageEmpresa, settings)
+                        console.log(`\t\t[9] - Iniciando processamento do mês ${settings.month}/${settings.year}`)
 
-                // 16 - Analisa se o CNPJ é de cliente válido
-                console.log('\t[13] - Analisando se o CNPJ/CPF do Prestador é cliente desta Contabilidade')
-                settings.cgceCompanie = await GetCNPJPrestador(pageEmpresa, settings)
+                        // 18 - Abre uma nova aba no navegador e navega pra página atual
+                        const pageMonth = await browser.newPage()
+                        await pageMonth.setViewport({ width: 0, height: 0 })
+                        await pageMonth.goto(urlActualEmpresa)
 
-                if (!settings.codeCompanie) {
-                    const getCompanie2 = new GetCompanie(`?cgce=${settings.cgceCompanie}`, false)
-                    const companie2 = await getCompanie2.getCompanie()
-                    settings.codeCompanie = companie2 ? companie2.code : ''
+                        try {
+                            // 11 - Clicando no botão NF-e Eletrônica
+                            console.log('\t\t[10] - Clicando no botão "NF-e Eletrônica"')
+                            await ClickNFeEletronica(pageMonth, settings)
+
+                            // 12 - Abre o link do botão "Entrar"
+                            console.log('\t\t[11] - Clicando no botão "Entrar"')
+                            await GotoLinkNFeEletrotinaEntrar(pageMonth, settings)
+
+                            // 13 - Aviso depois do botão "Entrar" --> caso tenha aviso para o processamento desta
+                            // empresa, pois geralmente quando tem é empresa sem atividade de serviço ou usuário inválido
+                            await CheckIfAvisoFrameMnuAfterEntrar(pageMonth, settings)
+
+                            // 14 - Passa pelo Alerta do Simples Nacional
+                            console.log('\t\t[12] - Passando pelo alerta do simples nacional.')
+                            await AlertSimplesNacional(pageMonth, settings)
+
+                            // 15 - Clica no botão "Download de XML de Notas Fiscais por período"
+                            console.log('\t\t[13] - Clicando no botão "Download de XML de Notas Fiscais por período"')
+                            await ClickDownloadXML(pageMonth, settings)
+
+                            // 16 - Analisa se o CNPJ é de cliente válido
+                            console.log('\t\t[14] - Analisando se o CNPJ/CPF do Prestador é cliente desta Contabilidade')
+                            settings.cgceCompanie = await GetCNPJPrestador(pageMonth, settings)
+
+                            if (!settings.codeCompanie) {
+                                const getCompanie2 = new GetCompanie(`?cgce=${settings.cgceCompanie}`, false)
+                                const companie2 = await getCompanie2.getCompanie()
+                                settings.codeCompanie = companie2 ? companie2.code : ''
+                            }
+
+                            // 17 - Seleciona o Período pra download
+                            console.log('\t\t[15] - Seleciona o período desejado pra baixar os XMLs')
+                            await SelectPeriodToDownload(pageMonth, settings)
+
+                            // 18 - Clica no botão "Listar"
+                            console.log('\t\t[16] - Clicando no botão "Listar"')
+                            const newPagePromise: Promise<Page> = new Promise(resolve => (
+                                browser.once('targetcreated', target => resolve(target.page()))
+                            ))
+                            await ClickListarXML(pageMonth, settings, newPagePromise)
+
+                            // 19 - Verifica se tem notas no período solicitado, caso não, para o processamento
+                            await CheckIfExistNoteInPeriod(pageMonth, settings)
+
+                            // 20 - Abre o conteúdo do XML
+                            console.log('\t\t[17] - Abrindo os dados das notas')
+                            await ClickToOpenContentXML(pageMonth, settings)
+
+                            // 21 - Pega conteúdo do XML
+                            console.log('\t\t[18] - Obtendo conteúdo das notas')
+                            const contentXML = await GetContentXML(pageMonth, settings)
+
+                            // 21 - Serializa conteúdo do XML
+                            console.log('\t\t[19] - Retirando caracteres inválidos dos XMLs')
+                            const contentXMLSerializable = await SerializeXML(pageMonth, settings, contentXML)
+
+                            // 22 - Salva o XML
+                            console.log('\t\t[20] - Salvando XML das notas')
+                            await SaveXML(pageMonth, settings, contentXMLSerializable)
+
+                            // Fecha a aba da empresa afim de que possa abrir outra
+                            await CloseOnePage(pageMonth, 'Empresa-Mes')
+                        } catch (error) {
+                            if (error.indexOf('NAO_HABILITADA_EMITIR_NFSE') >= 0) {
+                                breaker = true
+                                break
+                            }
+                        }
+                    }
+
+                    year++
                 }
-
-                // 17 - Seleciona o Período pra download
-                console.log('\t[14] - Seleciona o período desejado pra baixar os XMLs')
-                await SelectPeriodToDownload(pageEmpresa, settings)
-
-                // 18 - Clica no botão "Listar"
-                console.log('\t[15] - Clicando no botão "Listar"')
-                const newPagePromise: Promise<Page> = new Promise(resolve => (
-                    browser.once('targetcreated', target => resolve(target.page()))
-                ))
-                await ClickListarXML(pageEmpresa, settings, newPagePromise)
-
-                // 19 - Verifica se tem notas no período solicitado, caso não, para o processamento
-                await CheckIfExistNoteInPeriod(pageEmpresa, settings)
-
-                // 20 - Abre o conteúdo do XML
-                console.log('\t[16] - Abrindo os dados das notas')
-                await ClickToOpenContentXML(pageEmpresa, settings)
-
-                // 21 - Pega conteúdo do XML
-                console.log('\t[17] - Obtendo conteúdo das notas')
-                const contentXML = await GetContentXML(pageEmpresa, settings)
-
-                // 21 - Pega conteúdo do XML
-                console.log('\t[18] - Retirando caracter inválido dos XMLs')
-                const contentXMLSerializable = await SerializeXML(pageEmpresa, settings, contentXML)
-
-                // 22 - Salva o XML
-                console.log('\t[19] - Salvando XML das notas')
-                await SaveXML(pageEmpresa, settings, contentXMLSerializable)
 
                 // Fecha a aba da empresa afim de que possa abrir outra
                 await CloseOnePage(pageEmpresa)

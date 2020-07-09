@@ -15,8 +15,8 @@ const ClickDownloadXML = async (page: Page, settings: ISettingsGoiania): Promise
             throw 'NOT_FOUND_FRAME_CPO'
         }
     } catch (error) {
-        console.log('\t[Final-Empresa] - Erro ao clicar no botão "Download de XML de Notas Fiscais por período".')
-        console.log('\t-------------------------------------------------')
+        console.log('\t\t[Final-Empresa-Mes] - Erro ao clicar no botão "Download de XML de Notas Fiscais por período".')
+        console.log('\t\t-------------------------------------------------')
         settings.typeLog = 'error'
         settings.messageLog = 'ClickDownloadXML'
         settings.messageError = error

@@ -16,12 +16,12 @@ const CheckIfExistNoteInPeriod = async (page: Page, settings: ISettingsGoiania):
     } catch (error) {
         settings.typeLog = 'error'
         if (error === 'NOT_EXIST_NFSE') {
-            console.log('\t[16] - Não há nenhuma nota no filtro passado')
+            console.log('\t\t[16] - Não há nenhuma nota no filtro passado')
             settings.typeLog = 'warning'
         } else {
-            console.log('\t[Final-Empresa] - Erro ao checar se existe nota no período')
+            console.log('\t\t[Final-Empresa-Mes] - Erro ao checar se existe nota no período')
         }
-        console.log('\t-------------------------------------------------')
+        console.log('\t\t-------------------------------------------------')
         settings.messageLog = 'CheckIfExistNoteInPeriod'
         settings.messageError = error
 

@@ -10,16 +10,16 @@ const SelectPeriodToDownload = async (page: Page, settings: ISettingsGoiania): P
         const frame = page.frames().find(frame => frame.name() === 'cpo')
         if (frame) {
             await frame.waitFor('[name=txt_dia_inicial]')
-            await frame.select('[name=txt_dia_inicial]', '01')
-            await frame.select('[name=txt_dia_final]', '31')
-            await frame.select('[name=sel_mes]', '05')
-            await frame.type('[name=txt_ano]', '2020')
+            await frame.select('[name=txt_dia_inicial]', `${settings.dayInitialMonth}`)
+            await frame.select('[name=txt_dia_final]', `${settings.dayFinalMonth}`)
+            await frame.select('[name=sel_mes]', `${settings.month}`)
+            await frame.type('[name=txt_ano]', `${settings.year}`)
         } else {
             throw 'NOT_FOUND_FRAME_CPO'
         }
     } catch (error) {
-        console.log('\t[Final-Empresa] - Erro ao selecionar o período')
-        console.log('\t-------------------------------------------------')
+        console.log('\t\t[Final-Empresa-Mes] - Erro ao selecionar o período')
+        console.log('\t\t-------------------------------------------------')
         settings.typeLog = 'error'
         settings.messageLog = 'SelectPeriodToDownload'
         settings.messageError = error

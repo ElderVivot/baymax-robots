@@ -15,8 +15,8 @@ const ClickListarXML = async (page: Page, settings: ISettingsGoiania, newPagePro
         const popup = await newPagePromise
         await page.goto(popup.url(), { waitUntil: 'load', timeout: 6000000 }) // aguarda até 60 minutos carregar a página pra fazer o download
     } catch (error) {
-        console.log('\t[Final-Empresa] - Erro ao listar os XMLs')
-        console.log('\t-------------------------------------------------')
+        console.log('\t\t[Final-Empresa-Mes] - Erro ao listar os XMLs')
+        console.log('\t\t-------------------------------------------------')
         settings.typeLog = 'error'
         settings.messageLog = 'ClickListarXML'
         settings.messageError = error

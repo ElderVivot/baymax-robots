@@ -7,8 +7,8 @@ const OpenCompanieInNewPage = async (page: Page, settings: ISettingsGoiania, url
     try {
         await page.goto(url)
     } catch (error) {
-        console.log('\t[Final-Empresa] - Erro ao clicar no botão "NF-e Eletrônica"')
-        console.log('\t-------------------------------------------------')
+        console.log('\t\t[Final-Empresa-Mes] - Erro ao clicar no botão "NF-e Eletrônica"')
+        console.log('\t\t-------------------------------------------------')
         settings.typeLog = 'error'
         settings.messageLog = 'OpenCompanieInNewPage'
         settings.messageError = error
