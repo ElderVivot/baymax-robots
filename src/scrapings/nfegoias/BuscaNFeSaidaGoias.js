@@ -1,29 +1,29 @@
-const puppeteer = require('puppeteer-extra')
 const path = require('path')
+const puppeteer = require('puppeteer-extra')
 const RecaptchaPlugin = require('puppeteer-extra-plugin-recaptcha')
 require('dotenv/config')
 
-const MainNFGoias = async() => {
-    
+const MainNFGoias = async () => {
     puppeteer.use(
         RecaptchaPlugin({
             provider: {
-            id: '2captcha',
-            token: process.env.API_2CAPTCHA
+                id: '2captcha',
+                token: process.env.API_2CAPTCHA
             },
             visualFeedback: true // colorize reCAPTCHAs (violet = detected, green = solved)
         })
     )
 
     const browser = await puppeteer.launch({
-        headless: false, args: ['--start-maximized'],
+        headless: false,
+        args: ['--start-maximized'],
         executablePath: path.join('C:', 'Program Files (x86)', 'Google', 'Chrome', 'Application', 'chrome.exe')
     })
 
-    let page = await browser.newPage()
+    const page = await browser.newPage({ ignoreHTTPSErrors: true })
 
-    await page.setViewport({ width:0, height:0 })  
-    
+    await page.setViewport({ width: 0, height: 0 })
+
     await page.goto('https://nfe.sefaz.go.gov.br/nfeweb/sites/nfe/consulta-publica/principal')
 
     await page.waitFor(3000)
@@ -38,14 +38,14 @@ const MainNFGoias = async() => {
 
     await page.waitFor(5000)
 
-    await page.click(".btn-download-all")
+    await page.click('.btn-download-all')
 
     await page.waitFor(3000)
 
     await page.click('#dnwld-all-btn-ok')
-    
+
     await page.waitFor(3000)
-    
+
     await browser.close()
 }
 

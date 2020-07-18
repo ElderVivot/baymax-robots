@@ -12,7 +12,7 @@ class Applicattion {
         this.hourLog = format(new Date(), 'yyyy-MM-dd hh:mm:ss a', { timeZone: 'America/Sao_Paulo' })
     }
 
-    async process () {
+    async process (): Promise<void> {
         const getPrefGoianiaAccess = new GetPrefGoianiaAccess()
         const allAccess = await getPrefGoianiaAccess.getAccess()
         for (const access of allAccess) {
@@ -29,6 +29,3 @@ class Applicattion {
 }
 
 export default Applicattion
-
-// const applicattion = new Applicattion()
-// applicattion.process()
