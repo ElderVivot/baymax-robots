@@ -1,6 +1,6 @@
 import fs from 'fs'
 
-import GetSettingsDownNotes from '../controllers/GetSettingsDownNotes'
+import GetSettingsWayFiles from '../controllers/GetSettingsWayFiles'
 import ISettingsGoiania from '../models/ISettingsGoiania'
 
 const mountFolder = (settings: ISettingsGoiania, folder: string) => {
@@ -42,8 +42,8 @@ const mountFolder = (settings: ISettingsGoiania, folder: string) => {
 }
 
 const createFolderToSaveData = async (settings: ISettingsGoiania, folderRoutineAutomactic = false): Promise<string> => {
-    const getSettingsDownNotes = new GetSettingsDownNotes()
-    const settingsDown = await getSettingsDownNotes.getSettings()
+    const getSettingsWayFiles = new GetSettingsWayFiles()
+    const settingsDown = await getSettingsWayFiles.getSettings()
     const { folderToSaveLogGoiania, folderToSaveXMLsGoiania, folderToSaveXMLsGoianiaRotinaAutomatica } = settingsDown
     let folder = ''
 
