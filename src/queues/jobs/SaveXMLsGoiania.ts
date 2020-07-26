@@ -57,7 +57,7 @@ const SaveXMLsGoiania = {
 
             try {
                 fs.writeFileSync(pathNote, builder.buildObject(nfToXml))
-                if (settings.companie && pathOriginalRoutineAutomactic) {
+                if (settings.codeCompanie && pathOriginalRoutineAutomactic) {
                     fs.writeFileSync(pathNoteRoutineAutomactic, builder.buildObject(nfToXml))
                 }
             } catch (error) {
@@ -72,6 +72,7 @@ const SaveXMLsGoiania = {
                 hourLog: settings.hourLog,
                 typeLog: 'success',
                 messageLog: 'SucessToSaveNotes',
+                messageLogToShowUser: 'Notas salvas com sucesso',
                 messageError: settings.messageError,
                 urlImageDown: '',
                 codeCompanie: settings.codeCompanie,
