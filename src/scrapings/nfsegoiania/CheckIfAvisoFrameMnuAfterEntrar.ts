@@ -21,6 +21,8 @@ const CheckIfAvisoFrameMnuAfterEntrar = async (page: Page, settings: ISettingsGo
         settings.typeLog = 'error'
         if (error === 'NAO_HABILITADA_EMITIR_NFSE') {
             console.log(`\t\t[Final-Empresa-Mes] - Empresa não habilitada pra emitir NFS-e. O aviso é "${aviso}".`)
+            settings.month = null
+            settings.year = null
             settings.typeLog = 'warning'
         } else {
             console.log('\t\\t[Final-Empresa-Mes] - Erro ao verificar se a empresa está habilitada pra emitir NFS-e Serviço')

@@ -11,5 +11,6 @@ export default interface ILogPrefGoiania {
     typeLog: TTypeLog,
     messageLog: string,
     messageError?: string,
-    urlImageDown: string
+    urlImageDown?: string,
+    qtdNotesDown?: number
 }

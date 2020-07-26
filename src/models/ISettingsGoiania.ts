@@ -13,6 +13,8 @@ export default interface ISettingsGoiania {
     inscricaoMunicipal?: string,
     year?: string,
     month?: string,
+    entradasOrSaidas?: string,
+    typeNF?: string,
     messageError?: string
     messageLog?: string
     error?: string,

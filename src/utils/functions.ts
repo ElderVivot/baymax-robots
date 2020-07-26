@@ -50,3 +50,19 @@ export function daysInitialAndEndOfMonth (month: number, year: number): IDateIni
 export function convertDateToString (date: Date): string {
     return `${date.getFullYear()}-${zeroLeft(String(date.getMonth() + 1))}-${zeroLeft(String(date.getDate()))}`
 }
+
+export function returnDataInDictOrArray (data: any, array: Array<any>, valueDefault = ''): any {
+    try {
+        let dataAccumulated = ''
+        for (let i = 0; i < array.length; i++) {
+            if (i === 0) {
+                dataAccumulated = data[array[i]]
+            } else {
+                dataAccumulated = dataAccumulated[array[i]]
+            }
+        }
+        return dataAccumulated
+    } catch (error) {
+        return valueDefault
+    }
+}

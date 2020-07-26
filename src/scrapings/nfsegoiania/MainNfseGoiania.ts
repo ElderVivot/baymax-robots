@@ -24,8 +24,8 @@ import GotoLinkNFeEletrotinaEntrar from './GotoLinkNFeEletrotinaEntrar'
 import Loguin from './Loguin'
 import OpenCompanieInNewPage from './OpenCompanieInNewPage'
 import OpenSiteGoiania from './OpenSiteGoiania'
-import SaveXML from './SaveXML'
 import SelectPeriodToDownload from './SelectPeriodToDownload'
+import SendXMLToQueues from './SendXMLToQueues'
 import SerializeXML from './SerializeXML'
 
 const MainNfseGoiania = async (settings: ISettingsGoiania): Promise<void> => {
@@ -62,6 +62,8 @@ const MainNfseGoiania = async (settings: ISettingsGoiania): Promise<void> => {
             console.log(`\t[5] - Iniciando processamento da empresa ${option.label} - ${option.inscricaoMunicipal}`)
 
             // set the default values at each iteration
+            settings.typeNF = 'NFS-e'
+            settings.entradasOrSaidas = 'Saidas'
             settings.cgceCompanie = undefined
             settings.codeCompanie = undefined
             settings.companie = undefined
@@ -185,8 +187,8 @@ const MainNfseGoiania = async (settings: ISettingsGoiania): Promise<void> => {
                             const contentXMLSerializable = await SerializeXML(pageMonth, settings, contentXML)
 
                             // 22 - Salva o XML
-                            console.log('\t\t[20] - Salvando XML das notas')
-                            await SaveXML(pageMonth, settings, contentXMLSerializable)
+                            console.log('\t\t[20] - Enviando XMLs das notas para as filas')
+                            await SendXMLToQueues(settings, contentXMLSerializable)
 
                             // Fecha a aba da empresa afim de que possa abrir outra
                             await CloseOnePage(pageMonth, 'Empresa-Mes')

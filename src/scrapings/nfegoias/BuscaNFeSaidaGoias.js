@@ -20,11 +20,11 @@ const MainNFGoias = async () => {
         executablePath: path.join('C:', 'Program Files (x86)', 'Google', 'Chrome', 'Application', 'chrome.exe')
     })
 
-    const page = await browser.newPage({ ignoreHTTPSErrors: true })
+    const page = await browser.newPage()
 
     await page.setViewport({ width: 0, height: 0 })
 
-    await page.goto('https://nfe.sefaz.go.gov.br/nfeweb/sites/nfe/consulta-publica/principal')
+    await page.goto('https://nfe.sefaz.go.gov.br/nfeweb/sites/nfe/consulta-publica/principal', { ignoreSSL: true })
 
     await page.waitFor(3000)
 
