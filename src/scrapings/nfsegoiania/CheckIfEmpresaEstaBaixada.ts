@@ -18,8 +18,10 @@ const CheckIfEmpresaEstaBaixada = async (page: Page, settings: ISettingsGoiania)
         if (error === 'BAIXADA_SUSPENSA') {
             console.log('\t[Final-Empresa] - Esta empresa está com situação "Baixada/Suspensa" na prefeitura. Fechando aba.')
             settings.typeLog = 'warning'
+            settings.messageLogToShowUser = 'Empresa com a situação "Baixada/Suspensa" na prefeitura.'
         } else {
             console.log('\t[Final-Empresa] - Erro ao verificar se a empresa está com o status "Baixa"')
+            settings.messageLogToShowUser = 'Erro ao checar o status da empresa na prefeitura.'
         }
         console.log('\t-------------------------------------------------')
         settings.messageLog = 'CheckIfEmpresaEstaBaixada'

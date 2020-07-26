@@ -21,6 +21,7 @@ const OpenSiteGoiania = async (page: Page, browser: Browser, settings: ISettings
         settings.typeLog = 'error'
         settings.messageLog = 'OpenSiteGoiania'
         settings.messageError = error
+        settings.messageLogToShowUser = 'Erro ao abrir o site de Goiânia'
 
         const treatsMessageLog = new TreatsMessageLog(page, settings, browser)
         await treatsMessageLog.saveLog()

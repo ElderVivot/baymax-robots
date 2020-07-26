@@ -42,6 +42,7 @@ const GetOptionsEmpresas = async (page: Page, browser: Browser, settings: ISetti
         settings.typeLog = 'error'
         settings.messageLog = 'GetOptionsEmpresas'
         settings.messageError = error
+        settings.messageLogToShowUser = 'Erro ao obter lista de empresas que o usuário tem acesso.'
 
         const treatsMessageLog = new TreatsMessageLog(page, settings, browser)
         await treatsMessageLog.saveLog()

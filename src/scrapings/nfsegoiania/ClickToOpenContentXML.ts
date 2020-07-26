@@ -16,6 +16,7 @@ const ClickToOpenContentXML = async (page: Page, settings: ISettingsGoiania): Pr
         settings.typeLog = 'error'
         settings.messageLog = 'ClickToOpenContentXML'
         settings.messageError = error
+        settings.messageLogToShowUser = 'Erro ao abrir o conteúdo do XML.'
 
         const treatsMessageLog = new TreatsMessageLog(page, settings)
         await treatsMessageLog.saveLog()

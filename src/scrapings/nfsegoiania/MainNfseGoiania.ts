@@ -73,6 +73,7 @@ const MainNfseGoiania = async (settings: ISettingsGoiania): Promise<void> => {
             settings.inscricaoMunicipal = undefined
             settings.messageError = undefined
             settings.messageLog = undefined
+            settings.messageLogToShowUser = undefined
             settings.month = undefined
             settings.typeLog = 'error'
             settings.valueLabelSite = undefined

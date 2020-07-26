@@ -12,6 +12,7 @@ const SerializeXML = async (page: Page, settings: ISettingsGoiania, contentXML: 
         settings.typeLog = 'error'
         settings.messageLog = 'SerializeXML'
         settings.messageError = error
+        settings.messageLogToShowUser = 'Erro ao retirar caracteres inválidos XML.'
 
         const treatsMessageLog = new TreatsMessageLog(page, settings)
         await treatsMessageLog.saveLog()

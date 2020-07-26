@@ -13,6 +13,7 @@ const ChangeCompanie = async (page: Page, settings: ISettingsGoiania): Promise<v
         settings.typeLog = 'error'
         settings.messageLog = 'ChangeCompanie'
         settings.messageError = error
+        settings.messageLogToShowUser = 'Erro ao realizar a troca de empresa.'
 
         const treatsMessageLog = new TreatsMessageLog(page, settings)
         await treatsMessageLog.saveLog()

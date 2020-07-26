@@ -15,8 +15,9 @@ export default interface ISettingsGoiania {
     month?: string,
     entradasOrSaidas?: string,
     typeNF?: string,
-    messageError?: string
-    messageLog?: string
+    messageError?: string,
+    messageLog?: string,
+    messageLogToShowUser?: string,
     error?: string,
     valueLabelSite?: string,
     dateStartDown?: string,

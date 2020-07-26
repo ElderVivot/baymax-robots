@@ -15,6 +15,7 @@ const CheckIfSelectLoaded = async (page: Page, settings: ISettingsGoiania): Prom
         settings.typeLog = 'error'
         settings.messageLog = 'CheckIfSelectLoaded'
         settings.messageError = error
+        settings.messageLogToShowUser = 'Erro ao checar se a troca de empresa foi realizada.'
 
         const treatsMessageLog = new TreatsMessageLog(page, settings)
         await treatsMessageLog.saveLog()

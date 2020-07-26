@@ -20,6 +20,7 @@ const AlertSimplesNacional = async (page: Page, settings: ISettingsGoiania): Pro
         settings.typeLog = 'error'
         settings.messageLog = 'AlertSimplesNacional'
         settings.messageError = error
+        settings.messageLogToShowUser = 'Erro ao passar pelo alerta do simples nacional.'
 
         const treatsMessageLog = new TreatsMessageLog(page, settings)
         await treatsMessageLog.saveLog()

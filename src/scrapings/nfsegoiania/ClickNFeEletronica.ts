@@ -13,6 +13,7 @@ const ClickNFeEletronica = async (page: Page, settings: ISettingsGoiania): Promi
         settings.typeLog = 'error'
         settings.messageLog = 'ClickNFeEletronica'
         settings.messageError = error
+        settings.messageLogToShowUser = 'Erro ao clicar no botão "NF-e Eletrônica".'
 
         const treatsMessageLog = new TreatsMessageLog(page, settings)
         await treatsMessageLog.saveLog()

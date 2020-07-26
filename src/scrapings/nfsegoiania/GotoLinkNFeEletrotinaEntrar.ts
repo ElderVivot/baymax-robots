@@ -22,6 +22,7 @@ const GotoLinkNFeEletrotinaEntrar = async (page: Page, settings: ISettingsGoiani
         settings.typeLog = 'error'
         settings.messageLog = 'GotoLinkNFeEletrotinaEntrar'
         settings.messageError = error
+        settings.messageLogToShowUser = 'Erro ao abrir o link de "NF-e Eletrônica" e passar pelo Alert.'
 
         const treatsMessageLog = new TreatsMessageLog(page, settings)
         await treatsMessageLog.saveLog()

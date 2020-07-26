@@ -10,6 +10,7 @@ export default interface ILogPrefGoiania {
     dateEndDown?: string,
     typeLog: TTypeLog,
     messageLog: string,
+    messageLogToShowUser: string,
     messageError?: string,
     urlImageDown?: string,
     qtdNotesDown?: number

@@ -23,6 +23,7 @@ const SelectPeriodToDownload = async (page: Page, settings: ISettingsGoiania): P
         settings.typeLog = 'error'
         settings.messageLog = 'SelectPeriodToDownload'
         settings.messageError = error
+        settings.messageLogToShowUser = 'Erro ao selecionar o período".'
 
         const treatsMessageLog = new TreatsMessageLog(page, settings)
         await treatsMessageLog.saveLog()

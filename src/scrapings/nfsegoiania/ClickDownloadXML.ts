@@ -20,6 +20,7 @@ const ClickDownloadXML = async (page: Page, settings: ISettingsGoiania): Promise
         settings.typeLog = 'error'
         settings.messageLog = 'ClickDownloadXML'
         settings.messageError = error
+        settings.messageLogToShowUser = 'Erro ao clicar no botão "Download de XML de Notas Fiscais por período".'
 
         const treatsMessageLog = new TreatsMessageLog(page, settings)
         await treatsMessageLog.saveLog()

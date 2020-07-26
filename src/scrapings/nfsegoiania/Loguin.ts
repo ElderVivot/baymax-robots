@@ -26,8 +26,10 @@ const Loguin = async (page: Page, browser: Browser, settings: ISettingsGoiania):
     } catch (error) {
         if (error === 'Usuário ou Senha Inválida') {
             console.log('[Final-Loguin] - Usuário ou senha inválida')
+            settings.messageLogToShowUser = 'Usuário ou senha inválida'
         } else {
             console.log('[Final-Loguin] - Erro ao fazer Loguin')
+            settings.messageLogToShowUser = 'Erro ao tentar fazer loguin'
         }
         settings.typeLog = 'error'
         settings.messageLog = 'Loguin'

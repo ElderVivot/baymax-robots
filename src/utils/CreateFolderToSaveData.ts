@@ -1,10 +1,16 @@
 import fs from 'fs'
+import path from 'path'
 
 import GetSettingsWayFiles from '../controllers/GetSettingsWayFiles'
 import ISettingsGoiania from '../models/ISettingsGoiania'
 
 const mountFolder = (settings: ISettingsGoiania, folder: string) => {
-    const folderSplit = folder.split('/')
+    let newFolder = folder
+    if (folder.indexOf('\\') >= 0) {
+        newFolder = folder.replace(/[\\]/g, '/')
+    }
+
+    const folderSplit = newFolder.split('/')
     let folderComplete = ''
     for (const field of folderSplit) {
         if (field === 'hourLog') {
@@ -44,7 +50,8 @@ const mountFolder = (settings: ISettingsGoiania, folder: string) => {
 const createFolderToSaveData = async (settings: ISettingsGoiania, folderRoutineAutomactic = false): Promise<string> => {
     const getSettingsWayFiles = new GetSettingsWayFiles()
     const settingsDown = await getSettingsWayFiles.getSettings()
-    const { folderToSaveLogGoiania, folderToSaveXMLsGoiania, folderToSaveXMLsGoianiaRotinaAutomatica } = settingsDown
+    const { folderToSaveXMLsGoiania, folderToSaveXMLsGoianiaRotinaAutomatica } = settingsDown
+    const folderToSaveLogGoiania = path.resolve(__dirname, '..', 'logs')
     let folder = ''
 
     if (settings.typeLog === 'success') {

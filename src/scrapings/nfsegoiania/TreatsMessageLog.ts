@@ -31,6 +31,7 @@ export default class TreatsMessageLog {
             typeLog: this.settings.typeLog || 'error',
             messageLog: this.settings.messageLog || '',
             messageError: this.settings.messageError,
+            messageLogToShowUser: this.settings.messageLogToShowUser,
             urlImageDown: this.pathImg,
             codeCompanie: this.settings.codeCompanie,
             nameCompanie: this.settings.companie,

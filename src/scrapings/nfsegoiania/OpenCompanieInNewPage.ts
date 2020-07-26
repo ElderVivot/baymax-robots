@@ -12,6 +12,7 @@ const OpenCompanieInNewPage = async (page: Page, settings: ISettingsGoiania, url
         settings.typeLog = 'error'
         settings.messageLog = 'OpenCompanieInNewPage'
         settings.messageError = error
+        settings.messageLogToShowUser = 'Erro ao abrir empresa numva nova página.'
 
         const treatsMessageLog = new TreatsMessageLog(page, settings)
         await treatsMessageLog.saveLog()
