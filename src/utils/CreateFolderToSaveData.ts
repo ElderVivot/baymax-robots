@@ -51,7 +51,7 @@ const createFolderToSaveData = async (settings: ISettingsGoiania, folderRoutineA
     const getSettingsWayFiles = new GetSettingsWayFiles()
     const settingsDown = await getSettingsWayFiles.getSettings()
     const { folderToSaveXMLsGoiania, folderToSaveXMLsGoianiaRotinaAutomatica } = settingsDown
-    const folderToSaveLogGoiania = path.resolve(__dirname, '..', 'logs')
+    const folderToSaveLogGoiania = path.resolve(__dirname, '..', '..', 'logs', 'goiania', 'hourLog', 'accessGoiania', 'typeLog', 'nameCompanieWithIM', 'yearMonth')
     let folder = ''
 
     if (settings.typeLog === 'success') {

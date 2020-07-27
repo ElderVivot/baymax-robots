@@ -1,4 +1,4 @@
-import { subMonths, subHours } from 'date-fns'
+import { subMonths, subDays } from 'date-fns'
 
 import GetMaxDateDownGoiania from '../controllers/GetMaxDateDownGoiania'
 import IPeriodToDownNotes from '../models/IPeriodToDownNotes'
@@ -15,7 +15,7 @@ const PeriodToDownNotesGoiania = async (settings: ISettingsGoiania): Promise<IPe
         dateStart = new Date(datedownmax)
     }
 
-    const dateEnd = subHours(new Date(), 36)
+    const dateEnd = subDays(new Date(), 2)
 
     return {
         dateStart, dateEnd

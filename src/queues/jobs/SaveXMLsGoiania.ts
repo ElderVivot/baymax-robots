@@ -56,9 +56,10 @@ const SaveXMLsGoiania = {
             pathNoteRoutineAutomactic = path.join(pathOriginalRoutineAutomactic, `${nameFileToSave}.xml`)
 
             try {
-                fs.writeFileSync(pathNote, builder.buildObject(nfToXml))
+                const xml = builder.buildObject(nfToXml)
+                fs.writeFileSync(pathNote, xml)
                 if (settings.codeCompanie && pathOriginalRoutineAutomactic) {
-                    fs.writeFileSync(pathNoteRoutineAutomactic, builder.buildObject(nfToXml))
+                    fs.writeFileSync(pathNoteRoutineAutomactic, xml)
                 }
             } catch (error) {
                 existError = true
@@ -73,7 +74,7 @@ const SaveXMLsGoiania = {
                 typeLog: 'success',
                 messageLog: 'SucessToSaveNotes',
                 messageLogToShowUser: 'Notas salvas com sucesso',
-                messageError: settings.messageError,
+                messageError: '',
                 urlImageDown: '',
                 codeCompanie: settings.codeCompanie,
                 nameCompanie: settings.companie,

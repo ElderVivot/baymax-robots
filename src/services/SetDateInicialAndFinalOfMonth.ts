@@ -15,6 +15,11 @@ export default function SetDateInicialAndFinalOfMonth (settings: ISettingsGoiani
     settings.dayFinalMonth = undefined
     settings.dateStartDown = undefined
     settings.dateEndDown = undefined
+    settings.error = undefined
+    settings.messageError = undefined
+    settings.messageLog = undefined
+    settings.messageLogToShowUser = undefined
+    settings.typeLog = 'error'
 
     settings.month = functions.zeroLeft(String(month), 2)
     settings.year = String(year)

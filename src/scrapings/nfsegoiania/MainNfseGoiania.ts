@@ -1,3 +1,4 @@
+import { format, zonedTimeToUtc } from 'date-fns-tz'
 import puppeteer, { Page } from 'puppeteer'
 
 import ISettingsGoiania from '../../models/ISettingsGoiania'
@@ -129,6 +130,9 @@ const MainNfseGoiania = async (settings: ISettingsGoiania): Promise<void> => {
                         const pageMonth = await browser.newPage()
                         await pageMonth.setViewport({ width: 0, height: 0 })
                         await pageMonth.goto(urlActualEmpresa)
+
+                        settings.dateStartDown = format(new Date(zonedTimeToUtc(settings.dateStartDown, 'America/Sao_Paulo')), 'yyyy-MM-dd hh:mm:ss a', { timeZone: 'America/Sao_Paulo' })
+                        settings.dateEndDown = format(new Date(zonedTimeToUtc(settings.dateEndDown, 'America/Sao_Paulo')), 'yyyy-MM-dd hh:mm:ss a', { timeZone: 'America/Sao_Paulo' })
 
                         try {
                             // 11 - Clicando no botão NF-e Eletrônica
