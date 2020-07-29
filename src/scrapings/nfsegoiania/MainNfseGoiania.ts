@@ -1,6 +1,7 @@
 import { format, zonedTimeToUtc } from 'date-fns-tz'
 import puppeteer, { Page } from 'puppeteer'
 
+import SaveCompaniesGoiania from '../../controllers/SaveCompaniesGoiania'
 import ISettingsGoiania from '../../models/ISettingsGoiania'
 import GetCompanie from '../../services/GetCompanie'
 import PeriodToDownNotesGoiania from '../../services/PeriodToDownNotesGoiania'
@@ -89,6 +90,14 @@ const MainNfseGoiania = async (settings: ISettingsGoiania): Promise<void> => {
             const companie = await getCompanie.getCompanie()
             settings.codeCompanie = companie ? companie.code : ''
 
+            const saveCompaniesGoiania = new SaveCompaniesGoiania()
+            await saveCompaniesGoiania.save({
+                inscricaoMunicipal: settings.inscricaoMunicipal,
+                name: settings.companie,
+                cgce: settings.cgceCompanie,
+                code: settings.codeCompanie
+            })
+
             try {
                 // 7 - Abre uma nova aba no navegador e navega pra página atual
                 const pageEmpresa = await browser.newPage()
@@ -163,6 +172,13 @@ const MainNfseGoiania = async (settings: ISettingsGoiania): Promise<void> => {
                                 const getCompanie2 = new GetCompanie(`?cgce=${settings.cgceCompanie}`, false)
                                 const companie2 = await getCompanie2.getCompanie()
                                 settings.codeCompanie = companie2 ? companie2.code : ''
+
+                                await saveCompaniesGoiania.save({
+                                    inscricaoMunicipal: settings.inscricaoMunicipal,
+                                    name: settings.companie,
+                                    cgce: settings.cgceCompanie,
+                                    code: settings.codeCompanie
+                                })
                             }
 
                             // 17 - Seleciona o Período pra download

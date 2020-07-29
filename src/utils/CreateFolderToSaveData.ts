@@ -57,7 +57,7 @@ const createFolderToSaveData = async (settings: ISettingsGoiania, folderRoutineA
     if (settings.typeLog === 'success') {
         folder = mountFolder(settings, folderToSaveXMLsGoiania)
         // when exists folderToSaveXMLsGoianiaRotinaAutomatica and I want to process folderRoutineAutomactic
-        if (folderRoutineAutomactic) {
+        if (folderRoutineAutomactic && settings.codeCompanie) {
             if (folderToSaveXMLsGoianiaRotinaAutomatica) {
                 folder = mountFolder(settings, folderToSaveXMLsGoianiaRotinaAutomatica)
             } else {

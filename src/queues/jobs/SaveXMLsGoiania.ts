@@ -3,7 +3,9 @@ import path from 'path'
 import { Parser, Builder } from 'xml2js'
 
 import SaveLogPrefGoiania from '../../controllers/SaveLogPrefGoiania'
+import SaveNotesNfse from '../../controllers/SaveNotesNfse'
 import ISettingsGoiania from '../../models/ISettingsGoiania'
+import NFSeGoiania from '../../services/read_xmls/NFSeGoiania'
 import createFolderToSaveData from '../../utils/CreateFolderToSaveData'
 import { returnDataInDictOrArray } from '../../utils/functions'
 
@@ -39,26 +41,41 @@ const SaveXMLsGoiania = {
                 GerarNfseResposta: nf
             }
 
-            const numberNF = returnDataInDictOrArray(nf, ['ListaNfse', 0, 'CompNfse', 0, 'Nfse', 0, 'InfNfse', 0, 'Numero', 0])
-
-            const keyNF = returnDataInDictOrArray(nf, ['ListaNfse', 0, 'CompNfse', 0, 'Nfse', 0, 'InfNfse', 0, 'CodigoVerificacao', 0])
-            const nameFileToSave = `${numberNF}_${keyNF}`
-
-            // const issueDateNF = returnDataInDictOrArray(nf, ['ListaNfse', 0, 'CompNfse', 0, 'Nfse', 0, 'InfNfse', 0, 'DataEmissao', 0])
-
-            // const valueNF = returnDataInDictOrArray(nf, ['ListaNfse', 0, 'CompNfse', 0, 'Nfse', 0, 'InfNfse', 0, 'DeclaracaoPrestacaoServico', 0, 'InfDeclaracaoPrestacaoServico', 0, 'Servico', 0, 'Valores', 0, 'ValorServicos', 0])
-
-            // const cnpjReceiver = returnDataInDictOrArray(nf, ['ListaNfse', 0, 'CompNfse', 0, 'Nfse', 0, 'InfNfse', 0, 'DeclaracaoPrestacaoServico', 0, 'InfDeclaracaoPrestacaoServico', 0, 'Tomador', 0, 'IdentificacaoTomador', 0, 'CpfCnpj', 0, 'Cnpj', 0])
-            // const cpfReceiver = returnDataInDictOrArray(nf, ['ListaNfse', 0, 'CompNfse', 0, 'Nfse', 0, 'InfNfse', 0, 'DeclaracaoPrestacaoServico', 0, 'InfDeclaracaoPrestacaoServico', 0, 'Tomador', 0, 'IdentificacaoTomador', 0, 'CpfCnpj', 0, 'Cpf', 0])
-            // const cgceReceiver = !cnpjReceiver ? cpfReceiver : cnpjReceiver
-
-            pathNote = path.join(pathOriginal, `${nameFileToSave}.xml`)
-            pathNoteRoutineAutomactic = path.join(pathOriginalRoutineAutomactic, `${nameFileToSave}.xml`)
-
             try {
+                const nfseGoiania = NFSeGoiania(nf)
+
+                const saveNotesNfse = new SaveNotesNfse()
+                await saveNotesNfse.save({
+                    codeCompanie: settings.codeCompanie,
+                    nameCompanie: settings.companie,
+                    cgceCompanie: nfseGoiania.cgcePrestador,
+                    inscricaoMunicipalCompanie: settings.inscricaoMunicipal,
+                    numberNote: nfseGoiania.numero,
+                    keyNote: nfseGoiania.codigoVerificacao,
+                    dateNote: nfseGoiania.dataEmissao,
+                    nameTomador: nfseGoiania.nameTomador,
+                    cgceTomador: nfseGoiania.cgceTomador,
+                    statusNote: nfseGoiania.statusNota,
+                    amountNote: nfseGoiania.valorServicos,
+                    amountCalculationBase: nfseGoiania.baseCalculo,
+                    rateISS: nfseGoiania.aliquotaIss,
+                    amountISS: nfseGoiania.valorIss,
+                    amountCSLL: nfseGoiania.valorCsll,
+                    amountINSS: nfseGoiania.valorInss,
+                    amountIRRF: nfseGoiania.valorIr,
+                    amountPIS: nfseGoiania.valorPis,
+                    amountCOFINS: nfseGoiania.valorCofins
+                })
+
+                const nameFileToSave = `${nfseGoiania.numero}-${nfseGoiania.codigoVerificacao}`
+
+                pathNote = path.join(pathOriginal, `${nameFileToSave}.xml`)
+                pathNoteRoutineAutomactic = path.join(pathOriginalRoutineAutomactic, `${nameFileToSave}.xml`)
+
                 const xml = builder.buildObject(nfToXml)
                 fs.writeFileSync(pathNote, xml)
                 if (settings.codeCompanie && pathOriginalRoutineAutomactic) {
+                    console.log(settings.codeCompanie)
                     fs.writeFileSync(pathNoteRoutineAutomactic, xml)
                 }
             } catch (error) {
