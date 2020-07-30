@@ -4,7 +4,7 @@
   "description": "Search datas automatically",
   "main": "src\\SearchNFSeGoiania.js",
   "scripts": {
-    "start": "node dist/main/server.js",
+    "start": "node dist/schedules/server.js",
     "build": "rimraf dist && tsc",
     "dev": "ts-node-dev --no-notify --respawn --transpileOnly --ignore-watch node_modules src/schedules/server.ts"
   },
