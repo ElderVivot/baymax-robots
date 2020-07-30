@@ -28,7 +28,7 @@ class Applicattion {
     }
 }
 
-const applicattion = new Applicattion()
-applicattion.process()
+// const applicattion = new Applicattion()
+// applicattion.process()
 
 export default Applicattion
