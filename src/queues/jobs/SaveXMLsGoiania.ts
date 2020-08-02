@@ -2,7 +2,6 @@ import fs from 'fs'
 import path from 'path'
 import { Parser, Builder } from 'xml2js'
 
-import SaveLogPrefGoiania from '../../controllers/SaveLogPrefGoiania'
 import SaveNotesNfse from '../../controllers/SaveNotesNfse'
 import ISettingsGoiania from '../../models/ISettingsGoiania'
 import NFSeGoiania from '../../services/read_xmls/NFSeGoiania'
