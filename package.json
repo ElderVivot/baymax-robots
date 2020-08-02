@@ -2,7 +2,7 @@
   "name": "robot",
   "version": "1.0.0",
   "description": "Search datas automatically",
-  "main": "src\\SearchNFSeGoiania.js",
+  "main": "dist/schedules/server.js",
   "scripts": {
     "start": "node dist/schedules/server.js",
     "build": "rimraf dist && tsc",

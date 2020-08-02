@@ -23,5 +23,6 @@ export default interface ISettingsGoiania {
     dateStartDown?: string,
     dateEndDown?: string,
     dayInitialMonth?: string,
-    dayFinalMonth?: string
+    dayFinalMonth?: string,
+    qtdNotes?: number
 }

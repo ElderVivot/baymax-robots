@@ -1,45 +1,48 @@
+import { zonedTimeToUtc } from 'date-fns-tz'
+
 import GetCompanies from '../controllers/GetCompanies'
 import ICompanies from '../models/ICompanies'
 
 export default class GetCompanie {
     private readonly onlyActive: boolean
     private readonly filter: string
+    private readonly month: number
+    private readonly year: number
 
-    constructor (filter: string, onlyActive: boolean) {
+    constructor (filter: string, onlyActive: boolean, month: number, year: number) {
         this.filter = filter
         this.onlyActive = onlyActive
+        this.month = month
+        this.year = year
     }
 
-    async checkIfActive (): Promise<Boolean> {
-        return true
-        // const companies = await getExtractCompanies.getData()
-        // for (const companie of companies) {
-        //     const cgce_emp = companie.cgce_emp
-        //     // ignora as empresas com CNPJ inválido
-        //     if (cgce_emp === null || cgce_emp === '' || cgce_emp === '00000000000000') {
-        //         continue
-        //     }
-
-        //     const stat_emp = companie.stat_emp.toUpperCase()
-        //     const dina_emp = companie.dina_emp === null ? null : moment(companie.dina_emp.substring(0, 10))
-        //     if (dina_emp !== null) {
-        //         if (dina_emp > this.dateFinal) {
-        //             this.companies.push(cgce_emp)
-        //         }
-        //     } else {
-        //         if (stat_emp === 'A') {
-        //             this.companies.push(cgce_emp)
-        //         }
-        //     }
-        // }
+    async getCompanieActive (companies: Array<ICompanies>): Promise<ICompanies> {
+        if (this.onlyActive) {
+            for (const companie of companies) {
+                const { dateInicialAsClient, dateFinalAsClient, cgce } = companie
+                const dateInicialAsClientToDate = dateInicialAsClient ? zonedTimeToUtc(dateInicialAsClient, 'America/Sao_Paulo') : null
+                const dateFinalAsClientToDate = dateFinalAsClient ? zonedTimeToUtc(dateFinalAsClient, 'America/Sao_Paulo') : null
+                const cgceSanatized = cgce ? cgce.trim : ''
+                if (cgceSanatized) {
+                    if (!dateInicialAsClientToDate || (dateInicialAsClientToDate.getMonth() + 1 >= this.month && dateInicialAsClientToDate.getFullYear() >= this.year)) {
+                        if (!dateFinalAsClientToDate || (dateFinalAsClientToDate.getMonth() + 1 <= this.month && dateFinalAsClientToDate.getFullYear() >= this.year)) {
+                            return companie
+                        }
+                    }
+                }
+            }
+            return companies[0]
+        } else {
+            return companies[0]
+        }
     }
 
     async getCompanie (): Promise<ICompanies> {
         const getCompanies = new GetCompanies()
         const companies = await getCompanies.getCompanies(this.filter)
-        return companies[0]
+        return await this.getCompanieActive(companies)
     }
 }
 
-// const getCompanie = new GetCompanie('?code=0', false)
+// const getCompanie = new GetCompanie('?inscricaoMunicipal=2502887', true, 1, 2020)
 // getCompanie.getCompanie().then(result => console.log(result))

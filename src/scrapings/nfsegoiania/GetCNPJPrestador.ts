@@ -15,23 +15,13 @@ const GetCNPJPrestador = async (page: Page, settings: ISettingsGoiania): Promise
                 return document.querySelector('#nr_cnpj')?.textContent
             }) || ''
         }
-        cpfCnpj = cpfCnpj.replace(/[^\d]+/g, '')
-        // const { companies } = settings
-        if (cpfCnpj === '') {
-            throw 'IS_NOT_CLIENT'
-        }
-        return cpfCnpj
+        return cpfCnpj.replace(/[^\d]+/g, '')
     } catch (error) {
-        settings.typeLog = 'error'
-        if (error === 'IS_NOT_CLIENT') {
-            console.log('\t\t[14] - Empresa não é cliente desta Contabilidade neste período')
-            settings.typeLog = 'warning'
-            settings.messageLogToShowUser = 'Empresa não é cliente desta Contabilidade neste período.'
-        } else {
-            console.log('\t\t[Final-Empresa] - Erro ao checar o CNPJ/CPF')
-            settings.messageLogToShowUser = 'Erro ao pegar o CNPJ/CPF da empresa.'
-        }
+        console.log('\t\t[Final-Empresa-Mes] - Erro ao checar o CNPJ/CPF')
         console.log('\t\t-------------------------------------------------')
+
+        settings.typeLog = 'error'
+        settings.messageLogToShowUser = 'Erro ao pegar o CNPJ/CPF da empresa.'
         settings.messageLog = 'GetCNPJPrestador'
         settings.messageError = error
 
