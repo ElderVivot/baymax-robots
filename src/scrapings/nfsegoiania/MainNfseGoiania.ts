@@ -104,6 +104,7 @@ const MainNfseGoiania = async (settings: ISettingsGoiania): Promise<void> => {
             const getCompanie = new GetCompanie(`?inscricaoMunicipal=${option.inscricaoMunicipal}`, companiesOnlyActive, monthInicial, yearInicial)
             const companie = await getCompanie.getCompanie()
             settings.codeCompanie = companie ? companie.code : ''
+            settings.companie = companie ? companie.name.substring(0, 70) : settings.companie.substring(0, 70)
 
             const saveCompaniesGoiania = new SaveCompaniesGoiania()
             await saveCompaniesGoiania.save({
@@ -179,6 +180,7 @@ const MainNfseGoiania = async (settings: ISettingsGoiania): Promise<void> => {
                                 const getCompanie2 = new GetCompanie(`?cgce=${settings.cgceCompanie}`, companiesOnlyActive, month, year)
                                 const companie2 = await getCompanie2.getCompanie()
                                 settings.codeCompanie = companie2 ? companie2.code : ''
+                                settings.companie = companie2 ? companie2.name.substring(0, 70) : settings.companie.substring(0, 70)
 
                                 await saveCompaniesGoiania.save({
                                     inscricaoMunicipal: settings.inscricaoMunicipal,
