@@ -32,8 +32,8 @@ import SendXMLToQueues from './SendXMLToQueues'
 import SerializeXML from './SerializeXML'
 import TreatsMessageLog from './TreatsMessageLog'
 
-const MainNfseGoiania = async (settings: ISettingsGoiania): Promise<void> => {
-    const { loguin } = settings
+const MainNfseGoianiaIndividual = async (settings: ISettingsGoiania): Promise<void> => {
+    const { loguin, inscricaoMunicipal, dateStartDown, dateEndDown } = settings
 
     try {
         let companiesOnlyActive = false
@@ -68,6 +68,9 @@ const MainNfseGoiania = async (settings: ISettingsGoiania): Promise<void> => {
 
         // 6 - Percorre o array de empresas
         for (const option of optionsEmpresas) {
+            // processa apenas a empresa com a inscricao municipal passada no settings
+            if (option.inscricaoMunicipal !== settings.inscricaoMunicipal) continue
+
             console.log(`\t[5] - Iniciando processamento da empresa ${option.label} - ${option.inscricaoMunicipal}`)
 
             // set the default values at each iteration
@@ -94,7 +97,13 @@ const MainNfseGoiania = async (settings: ISettingsGoiania): Promise<void> => {
             settings.inscricaoMunicipal = option.inscricaoMunicipal
 
             // 17 - Pega o período necessário pra processamento
-            const periodToDown = await PeriodToDownNotesGoiania(settings)
+            let periodToDown = null
+            if (dateStartDown && dateEndDown) {
+                periodToDown = await PeriodToDownNotesGoiania(settings)
+            } else {
+                periodToDown = { dateStart: dateStartDown, dateEnd: dateEndDown }
+            }
+
             let year = periodToDown.dateStart.getFullYear()
             const yearInicial = year
             const yearFinal = periodToDown.dateEnd.getFullYear()
@@ -104,7 +113,6 @@ const MainNfseGoiania = async (settings: ISettingsGoiania): Promise<void> => {
             const getCompanie = new GetCompanie(`?inscricaoMunicipal=${option.inscricaoMunicipal}`, companiesOnlyActive, monthInicial, yearInicial)
             const companie = await getCompanie.getCompanie()
             settings.codeCompanie = companie ? companie.code : ''
-            settings.companie = companie ? companie.name : settings.companie
 
             const saveCompaniesGoiania = new SaveCompaniesGoiania()
             await saveCompaniesGoiania.save({
@@ -180,7 +188,6 @@ const MainNfseGoiania = async (settings: ISettingsGoiania): Promise<void> => {
                                 const getCompanie2 = new GetCompanie(`?cgce=${settings.cgceCompanie}`, companiesOnlyActive, month, year)
                                 const companie2 = await getCompanie2.getCompanie()
                                 settings.codeCompanie = companie2 ? companie2.code : ''
-                                settings.companie = companie2 ? companie2.name : settings.companie
 
                                 await saveCompaniesGoiania.save({
                                     inscricaoMunicipal: settings.inscricaoMunicipal,
@@ -266,4 +273,4 @@ const MainNfseGoiania = async (settings: ISettingsGoiania): Promise<void> => {
     }
 }
 
-export default MainNfseGoiania
+export default MainNfseGoianiaIndividual
