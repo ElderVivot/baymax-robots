@@ -1,5 +1,6 @@
 import { format, zonedTimeToUtc } from 'date-fns-tz'
 import puppeteer, { Page } from 'puppeteer'
+import 'dotenv/config'
 
 import SaveCompaniesGoiania from '../../controllers/SaveCompaniesGoiania'
 import ISettingsGoiania from '../../models/ISettingsGoiania'
@@ -29,11 +30,17 @@ import OpenSiteGoiania from './OpenSiteGoiania'
 import SelectPeriodToDownload from './SelectPeriodToDownload'
 import SendXMLToQueues from './SendXMLToQueues'
 import SerializeXML from './SerializeXML'
+import TreatsMessageLog from './TreatsMessageLog'
 
 const MainNfseGoiania = async (settings: ISettingsGoiania): Promise<void> => {
     const { loguin } = settings
 
     try {
+        let companiesOnlyActive = false
+        if (process.env.COMPANIES_ONLY_ACTIVE === 'true') {
+            companiesOnlyActive = true
+        }
+
         console.log(`[0] - Abrindo loguin ${loguin}`)
 
         const browser = await puppeteer.launch({ headless: true, args: ['--start-maximized'] })
@@ -86,7 +93,15 @@ const MainNfseGoiania = async (settings: ISettingsGoiania): Promise<void> => {
             settings.companie = option.label
             settings.inscricaoMunicipal = option.inscricaoMunicipal
 
-            const getCompanie = new GetCompanie(`?inscricaoMunicipal=${option.inscricaoMunicipal}`, false)
+            // 17 - Pega o período necessário pra processamento
+            const periodToDown = await PeriodToDownNotesGoiania(settings)
+            let year = periodToDown.dateStart.getFullYear()
+            const yearInicial = year
+            const yearFinal = periodToDown.dateEnd.getFullYear()
+            const monthInicial = periodToDown.dateStart.getMonth() + 1
+            const monthFinal = periodToDown.dateEnd.getMonth() + 1
+
+            const getCompanie = new GetCompanie(`?inscricaoMunicipal=${option.inscricaoMunicipal}`, companiesOnlyActive, monthInicial, yearInicial)
             const companie = await getCompanie.getCompanie()
             settings.codeCompanie = companie ? companie.code : ''
 
@@ -115,14 +130,6 @@ const MainNfseGoiania = async (settings: ISettingsGoiania): Promise<void> => {
                 // 10 - Verificando se o "Contribuinte está com a situação Baixa"
                 console.log('\t[8] - Verificando se o "Contribuinte está com a situação Baixada/Suspensa"')
                 await CheckIfEmpresaEstaBaixada(pageEmpresa, settings)
-
-                // 17 - Pega o período necessário pra processamento
-                const periodToDown = await PeriodToDownNotesGoiania(settings)
-                let year = periodToDown.dateStart.getFullYear()
-                const yearInicial = year
-                const yearFinal = periodToDown.dateEnd.getFullYear()
-                const monthInicial = periodToDown.dateStart.getMonth() + 1
-                const monthFinal = periodToDown.dateEnd.getMonth() + 1
 
                 const urlActualEmpresa = pageEmpresa.url()
 
@@ -165,11 +172,11 @@ const MainNfseGoiania = async (settings: ISettingsGoiania): Promise<void> => {
                             await ClickDownloadXML(pageMonth, settings)
 
                             // 16 - Analisa se o CNPJ é de cliente válido
-                            console.log('\t\t[14] - Analisando se o CNPJ/CPF do Prestador é cliente desta Contabilidade')
+                            console.log('\t\t[14] - Pegando o CNPJ/CPF do Prestador')
                             settings.cgceCompanie = await GetCNPJPrestador(pageMonth, settings)
 
                             if (!settings.codeCompanie) {
-                                const getCompanie2 = new GetCompanie(`?cgce=${settings.cgceCompanie}`, false)
+                                const getCompanie2 = new GetCompanie(`?cgce=${settings.cgceCompanie}`, companiesOnlyActive, month, year)
                                 const companie2 = await getCompanie2.getCompanie()
                                 settings.codeCompanie = companie2 ? companie2.code : ''
 
@@ -181,12 +188,31 @@ const MainNfseGoiania = async (settings: ISettingsGoiania): Promise<void> => {
                                 })
                             }
 
-                            // 17 - Seleciona o Período pra download
-                            console.log('\t\t[15] - Seleciona o período desejado pra baixar os XMLs')
+                            // 18 - Seleciona o Período pra download
+                            console.log('\t\t[15] - Checando se esta empresa é cliente neste período')
+                            if (companiesOnlyActive && !settings.codeCompanie) {
+                                try {
+                                    throw 'COMPANIE_NOT_CLIENT_THIS_ACCOUNTING_OFFICE'
+                                } catch (error) {
+                                    console.log('\t\t[Final-Empresa-Mes] - Empresa não é cliente (está ativa) neste período.')
+                                    console.log('\t\t-------------------------------------------------')
+
+                                    settings.typeLog = 'warning'
+                                    settings.messageLogToShowUser = 'Empresa não é cliente (está ativa) neste período.'
+                                    settings.messageLog = 'CompanieNotClient'
+                                    settings.messageError = error
+
+                                    const treatsMessageLog = new TreatsMessageLog(pageMonth, settings)
+                                    await treatsMessageLog.saveLog()
+                                }
+                            }
+
+                            // 19 - Seleciona o Período pra download
+                            console.log('\t\t[16] - Seleciona o período desejado pra baixar os XMLs')
                             await SelectPeriodToDownload(pageMonth, settings)
 
-                            // 18 - Clica no botão "Listar"
-                            console.log('\t\t[16] - Clicando no botão "Listar"')
+                            // 20 - Clica no botão "Listar"
+                            console.log('\t\t[17] - Clicando no botão "Listar"')
                             const newPagePromise: Promise<Page> = new Promise(resolve => (
                                 browser.once('targetcreated', target => resolve(target.page()))
                             ))
@@ -195,20 +221,20 @@ const MainNfseGoiania = async (settings: ISettingsGoiania): Promise<void> => {
                             // 19 - Verifica se tem notas no período solicitado, caso não, para o processamento
                             await CheckIfExistNoteInPeriod(pageMonth, settings)
 
-                            // 20 - Abre o conteúdo do XML
-                            console.log('\t\t[17] - Abrindo os dados das notas')
+                            // 21 - Abre o conteúdo do XML
+                            console.log('\t\t[18] - Abrindo os dados das notas')
                             await ClickToOpenContentXML(pageMonth, settings)
 
-                            // 21 - Pega conteúdo do XML
-                            console.log('\t\t[18] - Obtendo conteúdo das notas')
+                            // 22 - Pega conteúdo do XML
+                            console.log('\t\t[19] - Obtendo conteúdo das notas')
                             const contentXML = await GetContentXML(pageMonth, settings)
 
-                            // 21 - Serializa conteúdo do XML
-                            console.log('\t\t[19] - Retirando caracteres inválidos dos XMLs')
+                            // 23 - Serializa conteúdo do XML
+                            console.log('\t\t[20] - Retirando caracteres inválidos dos XMLs')
                             const contentXMLSerializable = await SerializeXML(pageMonth, settings, contentXML)
 
-                            // 22 - Salva o XML
-                            console.log('\t\t[20] - Enviando XMLs das notas para as filas')
+                            // 24- Salva o XML
+                            console.log('\t\t[21] - Enviando XMLs das notas para as filas')
                             await SendXMLToQueues(settings, contentXMLSerializable)
 
                             // Fecha a aba da empresa afim de que possa abrir outra
