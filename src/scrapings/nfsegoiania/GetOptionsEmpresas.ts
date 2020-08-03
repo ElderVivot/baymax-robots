@@ -17,7 +17,7 @@ const GetOptionsEmpresas = async (page: Page, browser: Browser, settings: ISetti
                     let inscricaoMunicipal = '' // this code is inscricaoMunicipal
                     if (labelSplit.length > 1) {
                         const nameEmpresaSplit = labelSplit.slice(1, labelSplit.length)
-                        label = nameEmpresaSplit.join('').trim().replace(/([\u0300-\u036f]|[^0-9a-zA-Z ])/g, '').toUpperCase().substring(0, 70)
+                        label = nameEmpresaSplit.join('').trim().normalize('NFD').replace(/([\u0300-\u036f]|[^0-9a-zA-Z ])/g, '').toUpperCase().substring(0, 70)
                     } else {
                         label = labelSplit[0]
                     }
