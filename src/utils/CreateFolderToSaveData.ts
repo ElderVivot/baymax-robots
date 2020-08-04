@@ -39,6 +39,8 @@ const mountFolder = (settings: ISettingsGoiania, folder: string) => {
             folderComplete += settings.typeNF ? `${settings.typeNF}/` : ''
         } else if (field === 'codeCompanieWithNameCompanie') {
             folderComplete += settings.companie && settings.codeCompanie ? `${settings.codeCompanie} - ${nameCompanie}/` : `${nameCompanie} - ${settings.inscricaoMunicipal}/`
+        } else if (field === 'codeCompanieRotinaAutomatica') {
+            folderComplete += settings.codeCompanie ? `${settings.codeCompanie}-` : ''
         } else if (field === 'monthYearRotinaAutomatica') {
             folderComplete += settings.year && settings.month ? `${settings.month}${settings.year}/` : ''
         } else if (field === 'monthYear') {
