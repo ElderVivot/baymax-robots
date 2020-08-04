@@ -6,7 +6,9 @@ import ISettingsGoiania from '../models/ISettingsGoiania'
 
 const mountFolder = (settings: ISettingsGoiania, folder: string) => {
     let newFolder = folder
-    if (folder.indexOf('\\') >= 0) {
+    if (folder.substring(0, 2) === '\\\\') {
+        newFolder = folder.substring(0, 2) + folder.substring(2).replace(/[\\]/g, '/')
+    } else {
         newFolder = folder.replace(/[\\]/g, '/')
     }
 
@@ -18,6 +20,7 @@ const mountFolder = (settings: ISettingsGoiania, folder: string) => {
         if (field === 'hourLog') {
             folderComplete += settings.dateHourProcessing ? `${settings.dateHourProcessing}/` : ''
         } else if (field === 'accessGoiania') {
+            path.resolve(folderComplete, '')
             folderComplete += settings.loguin ? `${settings.loguin}/` : ''
         } else if (field === 'typeLog') {
             folderComplete += settings.typeLog ? `${settings.typeLog}/` : ''
