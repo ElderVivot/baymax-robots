@@ -25,7 +25,7 @@ export default class GetCompanie {
                 const cgceSanatized = cgce ? cgce.trim : ''
                 if (cgceSanatized) {
                     if (!dateInicialAsClientToDate || (dateInicialAsClientToDate.getMonth() + 1 >= this.month && dateInicialAsClientToDate.getFullYear() >= this.year)) {
-                        if (!dateFinalAsClientToDate || (dateFinalAsClientToDate.getMonth() + 1 <= this.month && dateFinalAsClientToDate.getFullYear() >= this.year)) {
+                        if (!dateFinalAsClientToDate || (dateFinalAsClientToDate.getMonth() + 1 <= this.month && dateFinalAsClientToDate.getFullYear() <= this.year)) {
                             return companie
                         }
                     }
