@@ -4,7 +4,7 @@ import NFSeGoiania from '../../scrapings/nfsegoiania/index'
 
 async function processNotes () {
     const applicattion = new NFSeGoiania()
-    applicattion.process()
+    await applicattion.process()
 }
 
 const job = new CronJob(
@@ -13,8 +13,7 @@ const job = new CronJob(
         await processNotes()
     },
     null,
-    true,
-    'America/Sao_Paulo'
+    true
 )
 
 export default job
