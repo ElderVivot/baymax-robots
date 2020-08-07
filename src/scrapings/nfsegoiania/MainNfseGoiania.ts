@@ -102,7 +102,6 @@ const MainNfseGoiania = async (settings: ISettingsGoiania): Promise<void> => {
             // Pega o período necessário pra processamento
             let periodToDown = null
             if (!dateStartDown && !dateEndDown) {
-                console.log(dateStartDown, dateEndDown)
                 periodToDown = await PeriodToDownNotesGoiania(settings)
             } else {
                 periodToDown = {

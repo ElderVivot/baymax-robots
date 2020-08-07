@@ -11,7 +11,6 @@ async function processNotes () {
         for (const log of logPrefGoianiaErrors) {
             const hourLogToCreateFolder = format(new Date(), 'yyyy-MM-dd_hh-mm-ss_a', { timeZone: 'America/Sao_Paulo' })
             const hourLog = format(new Date(), 'yyyy-MM-dd hh:mm:ss a', { timeZone: 'America/Sao_Paulo' })
-            console.log(log)
             await MainNfseGoiania({
                 id: log.id,
                 dateHourProcessing: hourLogToCreateFolder,
