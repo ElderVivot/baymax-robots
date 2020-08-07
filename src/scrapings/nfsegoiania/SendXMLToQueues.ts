@@ -1,9 +1,9 @@
 import ISettingsGoiania from '../../models/ISettingsGoiania'
-import Queue from '../../queues/lib/Queue'
+import SaveXMLsGoiania from '../../queues/lib/SaveXMLsGoiania'
 
 const SendXMLToQueues = async (settings: ISettingsGoiania, content: string): Promise<void> => {
     settings.typeLog = 'success'
-    await Queue.add({
+    await SaveXMLsGoiania.add({
         dataXml: `<geral>${content}</geral>`,
         settings
     })

@@ -6,7 +6,7 @@ export default interface ISettingsGoiania {
     loguin: string,
     idUser: number,
     password: string,
-    newOrUpdate: 'new' | 'update',
+    id?: number,
     typeLog?: TTypeLog,
     codeCompanie?: string,
     companie?: string,
@@ -25,5 +25,6 @@ export default interface ISettingsGoiania {
     dateEndDown?: string,
     dayInitialMonth?: string,
     dayFinalMonth?: string,
-    qtdNotes?: number
+    qtdNotes?: number,
+    qtdTimesReprocessed?: number
 }

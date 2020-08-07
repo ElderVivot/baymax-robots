@@ -26,6 +26,7 @@ export default class TreatsMessageLog {
 
         const saveLogPrefGoiania = new SaveLogPrefGoiania()
         await saveLogPrefGoiania.saveLog({
+            id: this.settings.id,
             prefGoianiaAccess: this.settings.idUser,
             hourLog: this.settings.hourLog,
             typeLog: this.settings.typeLog || 'error',
@@ -37,7 +38,8 @@ export default class TreatsMessageLog {
             nameCompanie: this.settings.companie,
             inscricaoMunicipal: this.settings.inscricaoMunicipal,
             dateStartDown: this.settings.dateStartDown,
-            dateEndDown: this.settings.dateEndDown
+            dateEndDown: this.settings.dateEndDown,
+            qtdNotesDown: this.settings.qtdTimesReprocessed
         })
 
         throw `[${this.settings.typeLog}]-${this.settings.messageLog}-${this.settings.messageError}`

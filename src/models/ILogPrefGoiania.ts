@@ -1,6 +1,7 @@
 import TTypeLog from './TTypeLog'
 
 export default interface ILogPrefGoiania {
+    id?: number,
     prefGoianiaAccess: number,
     inscricaoMunicipal?: string,
     nameCompanie?: string,
@@ -13,5 +14,6 @@ export default interface ILogPrefGoiania {
     messageLogToShowUser: string,
     messageError?: string,
     urlImageDown?: string,
-    qtdNotesDown?: number
+    qtdNotesDown?: number,
+    qtdTimesReprocessed?: number
 }

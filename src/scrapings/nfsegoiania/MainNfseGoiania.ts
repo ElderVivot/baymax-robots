@@ -33,7 +33,14 @@ import SerializeXML from './SerializeXML'
 import TreatsMessageLog from './TreatsMessageLog'
 
 const MainNfseGoiania = async (settings: ISettingsGoiania): Promise<void> => {
-    const { loguin } = settings
+    // pega os dados de inscricao municipal e data afim de não serem alterados no processamento
+    const { loguin, inscricaoMunicipal, dateStartDown, dateEndDown } = settings
+    // se tiver o id, quer dizer que esta reprocessando um erro, então aumenta qtdTimesReprocessed
+    if (settings.id) {
+        settings.qtdTimesReprocessed = settings.qtdTimesReprocessed ? settings.qtdTimesReprocessed + 1 : 1
+    } else {
+        settings.qtdTimesReprocessed = 0
+    }
 
     try {
         let companiesOnlyActive = false
@@ -64,6 +71,9 @@ const MainNfseGoiania = async (settings: ISettingsGoiania): Promise<void> => {
 
         // Percorre o array de empresas
         for (const option of optionsEmpresas) {
+            // processa apenas a empresa com a inscricao municipal passada no settings caso seja um update
+            if (inscricaoMunicipal) { if (option.inscricaoMunicipal !== inscricaoMunicipal) continue }
+
             console.log(`\t[5] - Iniciando processamento da empresa ${option.label} - ${option.inscricaoMunicipal}`)
 
             // set the default values at each iteration
@@ -90,7 +100,17 @@ const MainNfseGoiania = async (settings: ISettingsGoiania): Promise<void> => {
             settings.inscricaoMunicipal = option.inscricaoMunicipal
 
             // Pega o período necessário pra processamento
-            const periodToDown = await PeriodToDownNotesGoiania(settings)
+            let periodToDown = null
+            if (!dateStartDown && !dateEndDown) {
+                console.log(dateStartDown, dateEndDown)
+                periodToDown = await PeriodToDownNotesGoiania(settings)
+            } else {
+                periodToDown = {
+                    dateStart: new Date(zonedTimeToUtc(dateStartDown, 'America/Sao_Paulo')),
+                    dateEnd: new Date(zonedTimeToUtc(dateEndDown, 'America/Sao_Paulo'))
+                }
+            }
+
             let year = periodToDown.dateStart.getFullYear()
             const yearInicial = year
             const yearFinal = periodToDown.dateEnd.getFullYear()
@@ -242,7 +262,7 @@ const MainNfseGoiania = async (settings: ISettingsGoiania): Promise<void> => {
         }
 
         console.log('[Final-Loguin] - Todos os dados deste loguin processados, fechando navegador.')
-        await browser.close()
+        if (browser) await browser.close()
     } catch (error) {
         console.log(error)
     }

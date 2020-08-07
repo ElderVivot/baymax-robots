@@ -10,6 +10,7 @@ saveXMLsGoiania.on('failed', async (job, error) => {
     const { settings } = job.data
     const saveLogPrefGoiania = new SaveLogPrefGoiania()
     await saveLogPrefGoiania.saveLog({
+        id: settings.id,
         prefGoianiaAccess: settings.idUser,
         hourLog: settings.hourLog,
         typeLog: 'error',
@@ -33,6 +34,7 @@ saveXMLsGoiania.on('completed', async (job) => {
     const { settings } = job.data
     const saveLogPrefGoiania = new SaveLogPrefGoiania()
     await saveLogPrefGoiania.saveLog({
+        id: settings.id,
         prefGoianiaAccess: settings.idUser,
         hourLog: settings.hourLog,
         typeLog: 'success',
