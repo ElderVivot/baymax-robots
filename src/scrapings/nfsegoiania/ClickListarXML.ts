@@ -13,7 +13,7 @@ const ClickListarXML = async (page: Page, settings: ISettingsGoiania, newPagePro
             throw 'NOT_FOUND_FRAME_CPO'
         }
         const popup = await newPagePromise
-        await page.goto(popup.url(), { waitUntil: 'load', timeout: 6000000 }) // aguarda até 60 minutos carregar a página pra fazer o download
+        await page.goto(popup.url(), { waitUntil: 'networkidle0', timeout: 6000000 }) // aguarda até 60 minutos carregar a página pra fazer o download
     } catch (error) {
         console.log('\t\t[Final-Empresa-Mes] - Erro ao listar os XMLs')
         console.log('\t\t-------------------------------------------------')
