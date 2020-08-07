@@ -6,6 +6,7 @@ export default interface ISettingsGoiania {
     loguin: string,
     idUser: number,
     password: string,
+    newOrUpdate: 'new' | 'update',
     typeLog?: TTypeLog,
     codeCompanie?: string,
     companie?: string,
