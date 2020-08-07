@@ -47,7 +47,8 @@ saveXMLsGoiania.on('completed', async (job) => {
         inscricaoMunicipal: settings.inscricaoMunicipal,
         dateStartDown: settings.dateStartDown,
         dateEndDown: settings.dateEndDown,
-        qtdNotesDown: settings.qtdNotes
+        qtdNotesDown: settings.qtdNotes,
+        qtdTimesReprocessed: this.settings.qtdTimesReprocessed
     })
 })
 

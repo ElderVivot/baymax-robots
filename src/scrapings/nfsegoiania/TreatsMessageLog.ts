@@ -39,7 +39,8 @@ export default class TreatsMessageLog {
             inscricaoMunicipal: this.settings.inscricaoMunicipal,
             dateStartDown: this.settings.dateStartDown,
             dateEndDown: this.settings.dateEndDown,
-            qtdNotesDown: this.settings.qtdTimesReprocessed
+            qtdNotesDown: this.settings.qtdTimesReprocessed,
+            qtdTimesReprocessed: this.settings.qtdTimesReprocessed
         })
 
         throw `[${this.settings.typeLog}]-${this.settings.messageLog}-${this.settings.messageError}`
