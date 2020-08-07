@@ -23,7 +23,8 @@ saveXMLsGoiania.on('failed', async (job, error) => {
         inscricaoMunicipal: settings.inscricaoMunicipal,
         dateStartDown: settings.dateStartDown,
         dateEndDown: settings.dateEndDown,
-        qtdNotesDown: settings.qtdNotes
+        qtdNotesDown: settings.qtdNotes,
+        qtdTimesReprocessed: settings.qtdTimesReprocessed
     })
 
     console.log('Job failed', job.data)
@@ -48,7 +49,7 @@ saveXMLsGoiania.on('completed', async (job) => {
         dateStartDown: settings.dateStartDown,
         dateEndDown: settings.dateEndDown,
         qtdNotesDown: settings.qtdNotes,
-        qtdTimesReprocessed: this.settings.qtdTimesReprocessed
+        qtdTimesReprocessed: settings.qtdTimesReprocessed
     })
 })
 
