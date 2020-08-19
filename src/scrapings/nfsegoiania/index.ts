@@ -28,7 +28,4 @@ class Applicattion {
     }
 }
 
-const applicattion = new Applicattion()
-applicattion.process().then(_ => 'Teste')
-
 export default Applicattion
