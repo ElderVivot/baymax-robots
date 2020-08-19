@@ -1,7 +1,8 @@
 import fs from 'fs'
 import path from 'path'
+import 'dotenv/config'
 
-import GetSettingsWayFiles from '../controllers/GetSettingsWayFiles'
+// import GetSettingsWayFiles from '../controllers/GetSettingsWayFiles'
 import ISettingsGoiania from '../models/ISettingsGoiania'
 
 const mountFolder = (settings: ISettingsGoiania, folder: string) => {
@@ -56,9 +57,11 @@ const mountFolder = (settings: ISettingsGoiania, folder: string) => {
 }
 
 const createFolderToSaveData = async (settings: ISettingsGoiania, folderRoutineAutomactic = false): Promise<string> => {
-    const getSettingsWayFiles = new GetSettingsWayFiles()
-    const settingsDown = await getSettingsWayFiles.getSettings()
-    const { folderToSaveXMLsGoiania, folderToSaveXMLsGoianiaRotinaAutomatica } = settingsDown
+    // const getSettingsWayFiles = new GetSettingsWayFiles()
+    // const settingsDown = await getSettingsWayFiles.getSettings()
+    // const { folderToSaveXMLsGoiania, folderToSaveXMLsGoianiaRotinaAutomatica } = settingsDown
+    const folderToSaveXMLsGoiania = process.env.FOLDER_TO_SAVE_XMLs_GOIANIA
+    const folderToSaveXMLsGoianiaRotinaAutomatica = process.env.FOLDER_TO_SAVE_XMLs_GOIANIA_ROT_AUT
     const folderToSaveLogGoiania = path.resolve(__dirname, '..', '..', 'logs', 'goiania', 'hourLog', 'accessGoiania', 'typeLog', 'nameCompanieWithIM', 'yearMonth')
     let folder = ''
 
