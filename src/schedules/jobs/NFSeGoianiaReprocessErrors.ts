@@ -28,7 +28,7 @@ async function processNotes () {
 }
 
 const job = new CronJob(
-    '* */3 * * *',
+    '0 */3 * * *',
     async function () {
         await processNotes()
     },
