@@ -6,7 +6,9 @@
   "scripts": {
     "start": "node dist/schedules/server.js",
     "build": "rimraf dist && tsc",
-    "dev": "ts-node-dev --no-notify --respawn --transpileOnly --ignore-watch node_modules src/schedules/server.ts"
+    "dev:server": "ts-node-dev --no-notify --respawn --transpileOnly --ignore-watch node_modules src/schedules/server.ts",
+    "dev:queue": "ts-node-dev --no-notify --respawn --transpileOnly --ignore-watch node_modules src/queues/queue.ts",
+    "dev:goiania": "ts-node-dev --no-notify --respawn --transpileOnly --ignore-watch node_modules src/scrapings/nfsegoiania/index.ts"
   },
   "author": "",
   "license": "ISC",

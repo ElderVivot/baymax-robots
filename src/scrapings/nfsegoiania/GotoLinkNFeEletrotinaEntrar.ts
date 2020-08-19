@@ -14,7 +14,7 @@ const GotoLinkNFeEletrotinaEntrar = async (page: Page, settings: ISettingsGoiani
             page.on('dialog', async dialog => {
                 await dialog.accept()
             })
-            await page.goto(urlButtonEntrar)
+            await page.goto(urlButtonEntrar, { timeout: 200000 })
         }
     } catch (error) {
         console.log('\t\t[Final-Empresa-Mes] - Erro ao abrir o link do "NF-e Eletrônica" e passar pelo Alert')
