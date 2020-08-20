@@ -18,6 +18,6 @@ async function process () {
     }
 }
 
-process()
+process().then(_ => console.log())
 
 export default app
