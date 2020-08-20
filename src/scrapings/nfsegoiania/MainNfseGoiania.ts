@@ -120,6 +120,7 @@ const MainNfseGoiania = async (settings: ISettingsGoiania): Promise<void> => {
             const companie = await getCompanie.getCompanie()
             settings.codeCompanie = companie ? companie.code : ''
             settings.companie = companie ? companie.name : settings.companie
+            settings.cgceCompanie = companie ? companie.cgce : settings.cgceCompanie
 
             const saveCompaniesGoiania = new SaveCompaniesGoiania()
             await saveCompaniesGoiania.save({
