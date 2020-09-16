@@ -15,7 +15,7 @@ const PeriodToDownNotesGoiania = async (settings: ISettingsGoiania): Promise<IPe
         dateStart = new Date(datedownmax)
     }
 
-    const dateEnd = subDays(new Date(), 2)
+    const dateEnd = subDays(new Date(), 1)
 
     return {
         dateStart, dateEnd
