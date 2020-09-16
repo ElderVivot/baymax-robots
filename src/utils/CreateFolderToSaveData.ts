@@ -13,7 +13,7 @@ const mountFolder = (settings: ISettingsGoiania, folder: string) => {
         newFolder = folder.replace(/[\\]/g, '/')
     }
 
-    const nameCompanie = settings.companie ? settings.companie.trim().normalize('NFD').replace(/([\u0300-\u036f]|[/])/g, '').toUpperCase().substring(0, 70) : undefined
+    const nameCompanie = settings.companie ? settings.companie.trim().normalize('NFD').replace(/([\u0300-\u036f]|[^0-9a-zA-Z ])/g, '').toUpperCase().substring(0, 70) : undefined
     // const nameCompanie = settings.companie ? settings.companie.substring(0, 70) : undefined
 
     const folderSplit = newFolder.split('/')
