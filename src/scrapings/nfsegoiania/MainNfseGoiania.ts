@@ -34,6 +34,7 @@ import TreatsMessageLog from './TreatsMessageLog'
 
 const MainNfseGoiania = async (settings: ISettingsGoiania): Promise<void> => {
     // pega os dados de inscricao municipal e data afim de não serem alterados no processamento
+    settings.loguin = settings.loguin.replace(/[^0-9]/g, '')
     const { loguin, inscricaoMunicipal, dateStartDown, dateEndDown } = settings
     // se tiver o id, quer dizer que esta reprocessando um erro, então aumenta qtdTimesReprocessed
     if (settings.id) {
