@@ -5,16 +5,16 @@ import TreatsMessageLog from './TreatsMessageLog'
 
 const Loguin = async (page: Page, browser: Browser, settings: ISettingsGoiania): Promise<void> => {
     try {
-        await page.waitFor('#wt38_wtLoginContent_wtUserNameInput')
-        await page.type('#wt38_wtLoginContent_wtUserNameInput', settings.loguin)
-        await page.type('#wt38_wtLoginContent_wtPasswordInput', settings.password)
-        await page.click('#wt38_wtLoginContent_wt8')
+        await page.waitFor('#wt11_wtMainContent_wtUserNameInput')
+        await page.type('#wt11_wtMainContent_wtUserNameInput', settings.loguin)
+        await page.type('#wt11_wtMainContent_wtPasswordInput', settings.password)
+        await page.click('#wt11_wtMainContent_wt20')
         await page.waitFor(4000)
 
         let userInvalid
         try {
             userInvalid = await page.evaluate(() => {
-                return document.querySelector('#wt38_WebPatterns_wt5_block_RichWidgets_wt9_block_wtSanitizedHtml2')?.textContent
+                return document.querySelector('#wt11_WebPatterns_wt4_block_RichWidgets_wt9_block_wtnotify')?.textContent
             })
         } catch (error) {
             userInvalid = undefined
