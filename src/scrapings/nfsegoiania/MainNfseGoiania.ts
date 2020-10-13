@@ -11,7 +11,7 @@ import * as functions from '../../utils/functions'
 import AlertSimplesNacional from './AlertSimplesNacional'
 import ChangeCompanie from './ChangeCompanie'
 import CheckIfAvisoFrameMnuAfterEntrar from './CheckIfAvisoFrameMnuAfterEntrar'
-import CheckIfEmpresaEstaBaixada from './CheckIfEmpresaEstaBaixada'
+// import CheckIfEmpresaEstaBaixada from './CheckIfEmpresaEstaBaixada'
 import CheckIfExistNoteInPeriod from './CheckIfExistNoteInPeriod'
 import CheckIfSelectLoaded from './CheckIfSelectLoaded'
 import ClickDownloadXML from './ClickDownloadXML'
@@ -51,7 +51,7 @@ const MainNfseGoiania = async (settings: ISettingsGoiania): Promise<void> => {
 
         console.log(`[0] - Abrindo loguin ${loguin}`)
 
-        const browser = await puppeteer.launch({ headless: true, args: ['--start-maximized'] })
+        const browser = await puppeteer.launch({ headless: false, args: ['--start-maximized'] })
         const page = await browser.newPage()
         await page.setViewport({ width: 1366, height: 768 })
 
@@ -144,8 +144,8 @@ const MainNfseGoiania = async (settings: ISettingsGoiania): Promise<void> => {
                 console.log('\t[7] - Checando se a troca foi realizada com sucesso')
                 await CheckIfSelectLoaded(pageEmpresa, settings)
 
-                console.log('\t[8] - Verificando se o "Contribuinte está com a situação Baixada/Suspensa"')
-                await CheckIfEmpresaEstaBaixada(pageEmpresa, settings)
+                // console.log('\t[8] - Verificando se o "Contribuinte está com a situação Baixada/Suspensa"')
+                // await CheckIfEmpresaEstaBaixada(pageEmpresa, settings)
 
                 const urlActualEmpresa = pageEmpresa.url()
 
