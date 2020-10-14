@@ -51,7 +51,7 @@ const MainNfseGoiania = async (settings: ISettingsGoiania): Promise<void> => {
 
         console.log(`[0] - Abrindo loguin ${loguin}`)
 
-        const browser = await puppeteer.launch({ headless: false, args: ['--start-maximized'] })
+        const browser = await puppeteer.launch({ headless: true, args: ['--start-maximized'] })
         const page = await browser.newPage()
         await page.setViewport({ width: 1366, height: 768 })
 
