@@ -1,9 +1,9 @@
-import path from 'path'
+// import path from 'path'
 import { Browser, Page } from 'puppeteer'
 
 import SaveLogPrefGoiania from '../../controllers/SaveLogPrefGoiania'
 import ISettingsGoiania from '../../models/ISettingsGoiania'
-import createFolderToSaveData from '../../utils/CreateFolderToSaveData'
+// import createFolderToSaveData from '../../utils/CreateFolderToSaveData'
 
 export default class TreatsMessageLog {
     private page: Page
@@ -18,9 +18,9 @@ export default class TreatsMessageLog {
     }
 
     async saveLog (): Promise<void> {
-        this.pathImg = await createFolderToSaveData(this.settings)
-        this.pathImg = path.resolve(this.pathImg, `${this.settings.messageLog}.png`)
-        await this.page.screenshot({ path: this.pathImg, fullPage: true })
+        // this.pathImg = await createFolderToSaveData(this.settings)
+        // this.pathImg = path.resolve(this.pathImg, `${this.settings.messageLog}.png`)
+        // await this.page.screenshot({ path: this.pathImg, fullPage: true })
         await this.page.close()
         if (this.browser) await this.browser.close()
 
