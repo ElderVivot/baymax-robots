@@ -5,9 +5,9 @@ import TreatsMessageLog from './TreatsMessageLog'
 
 const CheckIfEmpresaEstaBaixada = async (page: Page, settings: ISettingsGoiania): Promise<void> => {
     try {
-        await page.waitFor('#GoianiaTheme_wtTelaPrincipal_block_wtMainContent_WebPatterns_wt157_block_wtContent1_wtLinks')
+        await page.waitFor('#GoianiaTheme_wtTelaPrincipal_block_wtMainContent_WebPatterns_wt160_block_wtContent1_wtLinks')
         let aviso = await page.evaluate(() => {
-            return document.querySelector('#GoianiaTheme_wtTelaPrincipal_block_wtMainContent_WebPatterns_wt157_block_wtContent1_wtLinks > div:nth-child(1)')?.textContent
+            return document.querySelector('#GoianiaTheme_wtTelaPrincipal_block_wtMainContent_WebPatterns_wt160_block_wtContent1_wtLinks > div:nth-child(1)')?.textContent
         })
         aviso = aviso ? aviso.normalize('NFD').replace(/[^a-zA-Z/ ]/g, '').toUpperCase() : ''
         if (aviso.indexOf('SITUACAO BAIXA') >= 0 || aviso.indexOf('SITUACAO SUSPENSAO') >= 0) {
