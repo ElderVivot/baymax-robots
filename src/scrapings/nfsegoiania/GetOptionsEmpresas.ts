@@ -6,10 +6,10 @@ import TreatsMessageLog from './TreatsMessageLog'
 
 const GetOptionsEmpresas = async (page: Page, browser: Browser, settings: ISettingsGoiania): Promise<IOptionsInAccessPrefGoiania[]> => {
     try {
-        await page.waitFor('#GoianiaTheme_wtTelaPrincipal_block_wtActions_SISEGIntegration_wt108_block_wtAcessos')
+        await page.waitFor('#GoianiaTheme_wtTelaPrincipal_block_wtActions_SISEGIntegration_wt100_block_wtAcessos')
         return await page.evaluate(() => {
             const options: IOptionsInAccessPrefGoiania[] = []
-            const optionsAll = document.querySelectorAll('#GoianiaTheme_wtTelaPrincipal_block_wtActions_SISEGIntegration_wt108_block_wtAcessos > option')
+            const optionsAll = document.querySelectorAll('#GoianiaTheme_wtTelaPrincipal_block_wtActions_SISEGIntegration_wt100_block_wtAcessos > option')
             optionsAll.forEach(value => {
                 if (value.textContent !== 'Informe a Empresa') {
                     const labelSplit = value.textContent?.split('-') || []
